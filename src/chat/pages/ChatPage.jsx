@@ -1,7 +1,16 @@
+import styled from "styled-components";
+import ChatbotIcon from "@/assets/ChatbotIcon.svg";
+import UserIcon from "@/assets/UserIcon.svg";
+
 export default function ChatPage() {
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+   <Wrapper>
       <h1>Chat Page</h1>
-    </div>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100%;
+`;
