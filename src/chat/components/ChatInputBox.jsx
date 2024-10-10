@@ -14,7 +14,7 @@ export default function ChatInputBox(message, setMessage, onSendClicked) {
             }
         }}
         />
-        <CircleSend>
+        <CircleSend onClick={onSendClicked}>
         <Send color="white"/>
         </CircleSend>
         </Wrapper>
@@ -41,10 +41,11 @@ const Wrapper = styled.div`
     background-color: #ECECEC;
 `;
 
-const CircleSend = styled.div`
+const CircleSend = styled.button`
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    border-color: transparent;
     background-color: #F08A5D;
     display: flex;
     justify-content: center;
