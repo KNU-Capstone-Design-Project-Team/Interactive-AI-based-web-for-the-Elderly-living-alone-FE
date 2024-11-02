@@ -2,13 +2,24 @@ import styled from "styled-components";
 import UserIcon from "@/assets/UserIcon.svg";
 
 // 아래의 변수들은 임시로 만든 것. 실제론 백에서 정보를 받아와서 그 정보에 따라 다르게 나타나는 값들.
-const name = "차예원";
-const meassages = ["즉시 방문해보세요.", "방문을 권고합니다.", ""];
-const ratio = 0;
+const sampleName = "차예원";
+const sampleRatio = 0;
+
+const getMessage = (ratio) => {
+  if (ratio === 0) return "즉시 방문해보세요.";
+  else if (ratio >= 50) return "";
+  else return "방문을 권고합니다.";
+};
+
+const getBackgroundColor = (ratio) => {
+  if (ratio === 0) return "#FF6347";
+  else if (ratio >= 50) return "#32CD32";
+  else return "#FFA500";
+};
 
 export default function PersonalAlarm() {
   return (
-    <Wrapper>
+    <Wrapper ratio={sampleRatio}>
       <ProfileWrapper>
         <CircleProfile>
           <img src={UserIcon} alt="UserIcon" />
@@ -16,10 +27,10 @@ export default function PersonalAlarm() {
       </ProfileWrapper>
       <TotalTextWrapper>
         <StyledText>
-          <b>{name}</b>님의 하루 응답률은 <b>{ratio}%</b>입니다.
+          <b>{sampleName}</b>님의 하루 응답률은 <b>{sampleRatio}%</b>입니다.
         </StyledText>
         <SmallTextWrapper>
-          <WarningMessage>{meassages[0]}</WarningMessage>
+          <WarningMessage>{getMessage(sampleRatio)}</WarningMessage>
           <Date>2024.10.10.목</Date>
         </SmallTextWrapper>
       </TotalTextWrapper>
@@ -35,6 +46,7 @@ const Wrapper = styled.div`
   align-items: center;
   border: 1px solid #aaaaaa;
   border-style: solid none;
+  background-color: ${({ ratio }) => getBackgroundColor(ratio)};
 `;
 
 const ProfileWrapper = styled.div`
