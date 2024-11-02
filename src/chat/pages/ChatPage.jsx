@@ -50,10 +50,12 @@ export default function ChatPage() {
       // await axios.post(`${API_BASE_URL}/chat`, { message: toSendMessage });
       setMessages((prevMessages) => [...prevMessages, { sender: "user", text: toSendMessage }]);
   
+
       // 입력 필드와 마지막 메시지 시간을 초기화
       setToSendMessage("");
       setLastMessageTime(Date.now());
   
+      setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: "This is a test AI response." }]);
       // 서버로부터 응답 메시지 가져오기
     //   const response = await axios.get(`${API_BASE_URL}/chat`);
     //   setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.message }]);
