@@ -1,10 +1,9 @@
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "@/global/pages/RootLayout";
 import InsideLayout from "@/global/pages/InsideLayout";
 import HomePage from "@/global/pages/HomePage";
 import ChatPage from "@/chat/pages/ChatPage";
 import RecommendPage from "@/recommend/pages/RecommendPage";
-
 
 const router = createBrowserRouter([
   {
@@ -25,9 +24,7 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-  
-  export default function Router() {
-    return (
-      <RouterProvider router={router}/>
-    );
-  }
+
+export default function Router() {
+  return <RouterProvider router={router} />;
+}
