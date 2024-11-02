@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import {Send} from "lucide-react";
 
-export default function ChatInputBox(message, setMessage, onSendClicked) {
-    return (
+export default function ChatInputBox({ message, setMessage, onSendClicked }) {
+return (
         <Wrapper>
         <SendInput 
         placeholder="답장을 입력해주세요"
@@ -35,10 +35,12 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0 15px 0 15px;
+    margin: 0 15px 10px 15px;
     padding: 0 20px 0 20px;
     border-radius: 30px;
     background-color: #ECECEC;
+    position: sticky;
+    bottom: 0;
 `;
 
 const CircleSend = styled.button`
