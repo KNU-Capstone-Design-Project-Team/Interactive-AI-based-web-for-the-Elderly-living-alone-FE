@@ -2,7 +2,7 @@ import React from "react";
 import { ReponsiveBar, ResponsiveBar } from "@nivo/bar";
 import styled from "styled-components";
 
-export default function PersonalChart({}) {
+export default function PersonalChart({ data }) {
   return (
     <ChartWrapper>
       <ResponsiveBar
@@ -22,6 +22,11 @@ export default function PersonalChart({}) {
   );
 }
 
+const getDayOfWeek = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocalDateString("ko-KR", { weekday: "short" });
+};
+
 const sampleData = [
   { date: "2024-10-26", responseRate: 30 },
   { date: "2024-10-27", responseRate: 70 },
@@ -40,16 +45,15 @@ const ChartWrapper = styled.div`
 `;
 
 const chartSettings = {
-  margin: { top: 50, right: 50, bottom: 50, left: 60 },
-  padding: 0.3,
-  borderColor: { from: "color", modifiers: [["darker", 1.6]] },
+  margin: { top: 20, right: 20, bottom: 20, left: 30 },
+  padding: 0.2,
   axisBottom: {
-    tickSize: 5,
-    tickPadding: 5,
+    tickSize: 3,
+    tickPadding: 3,
     tickRotation: 0,
     legend: "Date",
     legendPosition: "middle",
-    legendOffset: 32,
+    legendOffset: 20,
   },
   axisLeft: {
     tickSize: 5,
