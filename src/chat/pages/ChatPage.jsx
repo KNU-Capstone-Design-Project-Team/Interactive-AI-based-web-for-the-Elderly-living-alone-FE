@@ -70,10 +70,21 @@ export default function ChatPage() {
       <ChatList>
         {messages.map((msg, index) => (
           <Message key={index} sender={msg.sender}>
-            {msg.text}
-            <MessageIcon sender={msg.sender}>
-              {msg.sender === "ai" ? <BotMessageSquare size={24} /> : <UserRound size={24} />}
-            </MessageIcon>
+         {msg.sender === "ai" ? (
+         <>
+        <MessageIcon sender={msg.sender}>
+          <BotMessageSquare size={24} />
+        </MessageIcon>
+        {msg.text}
+        </>
+    ) : (
+      <>
+        {msg.text}
+        <MessageIcon sender={msg.sender}>
+          <UserRound size={24} />
+        </MessageIcon>
+      </>
+    )}
           </Message>
         ))}
       </ChatList>
@@ -103,13 +114,12 @@ const Message = styled.div`
   border-radius: 10px;
   align-self: ${({ sender }) => (sender === "user" ? "flex-end" : "flex-start")};
   display: flex;
-  justify-content: right;
+  justify-content: ${({ sender }) => (sender === "user" ? "right" : "left")}; // 수정된 부분
   gap: 5px;
 `;
 
 const MessageIcon = styled.div`
   display: flex;
-  justify-content:${({ sender })=> (sender === "user" ? "end" : "start")} ;
   border-radius: 50%; /* 동그라미 모양 */
   border: 1px solid black;
   width: 24px;
