@@ -46,16 +46,21 @@ export default function ChatPage() {
   const onSendClicked = async () => {
     if (toSendMessage.trim() === "") return;
 
-    // 메시지를 서버로 전송
-    await axios.post(`${API_BASE_URL}/chat`, { message: toSendMessage });
-
-    // 메시지 리스트에 추가
-    setMessages((prevMessages) => [...prevMessages, { sender: "user", text: toSendMessage }]);
-    setToSendMessage("");
-    setLastMessageTime(Date.now());
-    // 서버로부터 응답 메시지 가져오기
-    const response = await axios.get(`${API_BASE_URL}/chat`);
-    setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.message }]);
+    // try {
+      // 메시지를 서버로 전송하고 사용자의 메시지를 먼저 추가
+      // await axios.post(`${API_BASE_URL}/chat`, { message: toSendMessage });
+      setMessages((prevMessages) => [...prevMessages, { sender: "user", text: toSendMessage }]);
+  
+      // 입력 필드와 마지막 메시지 시간을 초기화
+      setToSendMessage("");
+      setLastMessageTime(Date.now());
+  
+      // 서버로부터 응답 메시지 가져오기
+    //   const response = await axios.get(`${API_BASE_URL}/chat`);
+    //   setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.message }]);
+    // } catch (error) {
+    //   console.error("Failed to send or receive message:", error);
+    // }
   };
 
 
