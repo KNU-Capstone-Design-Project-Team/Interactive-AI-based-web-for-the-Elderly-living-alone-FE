@@ -1,10 +1,9 @@
 import styled from "styled-components";
-import ChatbotIcon from "@/assets/ChatbotIcon.svg";
-import UserIcon from "@/assets/UserIcon.svg";
 import { useState, useEffect } from "react";
 import ChatInputBox from "@/chat/components/ChatInputBox.jsx";
 import axios from "axios";
 import { API_BASE_URL } from "@/global/const/const";
+import { BotMessageSquare, UserRound } from "lucide-react";
 
 export default function ChatPage() {
   const [toSendMessage, setToSendMessage] = useState("");
@@ -66,11 +65,13 @@ export default function ChatPage() {
 
   return (
    <Wrapper>
-      <h1>Chat Page</h1>
       <ChatList>
         {messages.map((msg, index) => (
           <Message key={index} sender={msg.sender}>
             {msg.text}
+            <MessageIcon sender={msg.sender}>
+              {msg.sender === "ai" ? <BotMessageSquare size={24} /> : <UserRound size={24} />}
+            </MessageIcon>
           </Message>
         ))}
       </ChatList>
@@ -94,9 +95,23 @@ const ChatList = styled.div`
 `;
 
 const Message = styled.div`
-  background-color: ${({ sender }) => (sender === "user" ? "#DCF8C6" : "#ECECEC")};
+  background-color: ${({ sender }) => (sender === "user" ? "#faeeb5" : "#ECECEC")};
   margin: 5px 0;
-  padding: 10px;
+  padding: 15px;
   border-radius: 10px;
   align-self: ${({ sender }) => (sender === "user" ? "flex-end" : "flex-start")};
+  display: flex;
+  justify-content: right;
+  gap: 5px;
+`;
+
+const MessageIcon = styled.div`
+  display: flex;
+  justify-content:${({ sender })=> (sender === "user" ? "end" : "start")} ;
+  border-radius: 50%; /* 동그라미 모양 */
+  border: 1px solid black;
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.4); /* 그림자 추가 */
 `;
