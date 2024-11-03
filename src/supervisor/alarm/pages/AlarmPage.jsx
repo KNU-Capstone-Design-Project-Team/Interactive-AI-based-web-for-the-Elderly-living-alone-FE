@@ -1,4 +1,6 @@
-import styled from "styeld-components";
-import AlarmList from "@/supervisor/components/AlarmList.jsx";
-
-export default function AlarmPage() {}
+export default function AlarmPage() {
+    return (
+        <div>ㅎㅇ</div>
+    );
+    
+}
