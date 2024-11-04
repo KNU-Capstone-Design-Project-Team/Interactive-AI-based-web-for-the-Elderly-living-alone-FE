@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import ChatInputBox from "@/chat/components/ChatInputBox.jsx";
+import ChatInputBox from "@/senior/chat/components/ChatInputBox.jsx";
 import axios from "axios";
 import { API_BASE_URL } from "@/global/const/const";
 import { BotMessageSquare, UserRound } from "lucide-react";
