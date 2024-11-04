@@ -1,13 +1,13 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "@/global/pages/RootLayout";
 import InsideLayout from "@/global/pages/InsideLayout";
-import SeniorHomePage from "@/global/pages/SeniorHomePage";
-import ChatPage from "@/chat/pages/ChatPage";
-import RecommendPage from "@/recommend/pages/RecommendPage";
+import SeniorHomePage from "@/senior/home/pages/SeniorHomePage";
+import ChatPage from "@/senior/chat/pages/ChatPage";
+import RecommendPage from "@/senior/recommend/pages/RecommendPage";
 import SupervisorHomePage from "@/supervisor/global/pages/SupervisorHomePage";
 import AlarmPage from "@/supervisor/alarm/pages/AlarmPage";
 import ChartPage from "@/supervisor/chart/pages/ChartPage";
-import LoginPage from "@/global/pages/LoginPage";
+import LoginPage from "@/start/pages/LoginPage";
 
 const router = createBrowserRouter([
   {
