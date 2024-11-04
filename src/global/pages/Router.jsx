@@ -7,6 +7,8 @@ import RecommendPage from "@/recommend/pages/RecommendPage";
 import SupervisorHomePage from "@/supervisor/global/pages/SupervisorHomePage";
 import AlarmPage from "@/supervisor/alarm/pages/AlarmPage";
 import ChartPage from "@/supervisor/chart/pages/ChartPage";
+import LoginPage from "@/global/pages/LoginPage";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -25,6 +27,7 @@ const router = createBrowserRouter([
           { path: "recommend", element: <RecommendPage /> },
           { path: "alarm", element: <AlarmPage /> },
           { path: "chart", element: <ChartPage /> },
+          { path: "login", element: <LoginPage /> },
         ],
       },
     ],
