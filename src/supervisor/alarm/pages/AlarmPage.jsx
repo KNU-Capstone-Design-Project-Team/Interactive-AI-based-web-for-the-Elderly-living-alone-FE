@@ -1,6 +1,7 @@
 export default function AlarmPage() {
-    return (
-        <div>ㅎㅇ</div>
-    );
-    
+  return (
+      <div>
+          <h1>ChartPage</h1>
+      </div>
+  );
 }
