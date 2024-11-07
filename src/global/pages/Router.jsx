@@ -9,7 +9,8 @@ import AlarmPage from "@/supervisor/alarm/pages/AlarmPage";
 import ChartPage from "@/supervisor/chart/pages/ChartPage";
 import LoginPage from "@/start/pages/LoginPage";
 import SignUpPage from "@/start/pages/SignUpPage";
-import GetUserInfoPage from "@/start/pages/GetUserInfoPage";
+
+
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,8 @@ const router = createBrowserRouter([
           { path: "chart", element: <ChartPage /> },
           { path: "login", element: <LoginPage /> },
           { path: "signup", element: <SignUpPage /> },
-          { path: "signup/:type", element: <GetUserInfoPage /> },
+
+        
         ],
       },
     ],
