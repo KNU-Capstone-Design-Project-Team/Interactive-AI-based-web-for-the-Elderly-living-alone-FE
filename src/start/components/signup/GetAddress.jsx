@@ -1,5 +1,5 @@
 
-export default function GetAdress() {
+export default function GetAddress() {
     return(
         <div>ㅎㅇ</div>
     )
