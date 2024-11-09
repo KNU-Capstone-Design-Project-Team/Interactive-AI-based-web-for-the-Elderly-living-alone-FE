@@ -1,19 +1,23 @@
 import styled from "styled-components";
-import NextButton from "@/start/components/NextButton.jsx";
+import NextButton from "@/start/module/NextButton.jsx";
 import { useState, useContext } from "react";
 import { ProcessStateContext } from "@/start/context/ProcessStateContext";
+import { CommonContext } from "@/start/context/CommonContext"
 import Supervisor from "@/assets/Supervisor.png";
 import Senior from "@/assets/Senior.png";
 export default function SelectUserType() {
     const { processState, setProcessState } = useContext(ProcessStateContext);
-    const [selectedType, setSelectedType] = useState(null);
+    const { userType, setUserType } = useContext(CommonContext);
 
     
     const handleSelect = (type) => {
-      setSelectedType(type);
-      console.log(selectedType);
+      setUserType(type);
+      console.log(type);
     };
 
+    const handleNext = () => {
+      setProcessState('getInfo')
+    }
   
   
     return (
@@ -22,21 +26,20 @@ export default function SelectUserType() {
         <SelectWrapper>
           <SelectButton
             onClick={() => handleSelect("senior")}
-            isSelected={selectedType === "senior"}
+            isSelected={userType === "senior"}
           >
             <Icon src={Senior} alt="OldMan" />
-            <SBtext isSelected={selectedType === "senior"}>행복어르신</SBtext>
+            <SBtext isSelected={userType === "senior"}>행복어르신</SBtext>
           </SelectButton>
           <SelectButton
             onClick={() => handleSelect("supervisor")}
-            isSelected={selectedType === "supervisor"}
+            isSelected={userType === "supervisor"}
           >
             <Icon src={Supervisor} alt="Supervisor" />
-            <SBtext isSelected={selectedType === "supervisor"}>보호자</SBtext>
+            <SBtext isSelected={userType === "supervisor"}>보호자</SBtext>
           </SelectButton>
         </SelectWrapper>
-  
-        <NextButton>다음으로</NextButton>
+        <NextButton onClick={handleNext}>다음으로</NextButton>
         </>
     );
   };
@@ -56,7 +59,6 @@ export default function SelectUserType() {
   const SelectWrapper = styled.div`
     display: flex;
     gap: 30px;
-    margin-bottom: 140px;
   `;
   const SelectButton = styled.button`
     display: flex;

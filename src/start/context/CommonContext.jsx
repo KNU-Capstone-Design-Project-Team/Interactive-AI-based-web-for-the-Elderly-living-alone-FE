@@ -7,7 +7,7 @@ export const CommonContextProvider = ({ children }) => {
   const [userName, setUserName] = useState("");
   const [userId, setUserId] = useState("");
   const [userPw, setUserPw] = useState("");
-  const [userPn, setUserPn] = useState("");
+  const [userPnum, setUserPnum] = useState("");
 
   return (
     <CommonContext.Provider 
@@ -20,8 +20,8 @@ export const CommonContextProvider = ({ children }) => {
       setUserId,
       userPw,
       setUserPw,
-      userPn,
-      setUserPn
+      userPnum,
+      setUserPnum
        }}>
       {children}
     </CommonContext.Provider>
