@@ -1,6 +1,6 @@
-import styled from "styled-components"
+import styled from "styled-components";
 import { useContext } from "react";
-import { ProcessStateContext } from "@/start/context/ProcessStateContext"
+import {ProcessStateContext, ProcessStateProvider} from "@/start/context/ProcessStateContext";
 import SelectUserType from "@/start/components/signup/SelectUserType";
 import GetInfo from "@/start/components/signup/GetInfo";
 import GetBirthday from "@/start/components/signup/GetBirthday";
@@ -11,20 +11,21 @@ import InputCode from "@/start/components/signup/InputCode";
 import OutputCode from "@/start/components/signup/OutputCode";
 
 export default function SignUpPage() {
-    const { processState } = useContext(ProcessStateContext);
-return(
-        <Wrapper>
-            {processState === 'selectType' && <SelectUserType/>}
-            {processState === 'getInfo' && <GetInfo/>}
-            {processState === 'getBirthday' && <GetBirthday/>}
-            {processState === 'getAddress' && <GetAddress/>}
-            {processState === 'getCategory' && <GetCategory/>}
-            {processState === 'getExtraCategory' && <GetExtraCategory/>}
-            {processState === 'InputCode' && <InputCode/>}
-            {processState === 'OutputCode' && <OutputCode/>}
-       </Wrapper>
-)
-};
+  const { processState } = useContext(ProcessStateContext);
+
+  return (
+      <Wrapper>
+        {processState === "selectType" && <SelectUserType />}
+        {processState === "getInfo" && <GetInfo />}
+        {processState === "getBirthday" && <GetBirthday />}
+        {processState === "getAddress" && <GetAddress />}
+        {processState === "getCategory" && <GetCategory />}
+        {processState === "getExtraCategory" && <GetExtraCategory />}
+        {processState === "InputCode" && <InputCode />}
+        {processState === "OutputCode" && <OutputCode />}
+      </Wrapper>
+  );
+}
 
 const Wrapper = styled.div`
   width: 100%;
@@ -33,4 +34,3 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-

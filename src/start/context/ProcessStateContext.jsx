@@ -3,7 +3,7 @@ import React, { createContext, useState } from "react";
 export const ProcessStateContext = createContext();
 
 export const ProcessStateProvider = ({ children }) => {
-  const [processState, setProcessState] = useState("selectType");
+  const [processState, setProcessState] = useState('selectType');
 
   return (
     <ProcessStateContext.Provider value={{ processState, setProcessState }}>

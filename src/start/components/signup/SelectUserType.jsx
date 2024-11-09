@@ -1,26 +1,20 @@
 import styled from "styled-components";
 import NextButton from "@/start/components/NextButton.jsx";
-import { useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { ProcessStateContext } from "@/start/context/ProcessStateContext";
 import Supervisor from "@/assets/Supervisor.png";
 import Senior from "@/assets/Senior.png";
 export default function SelectUserType() {
-    const [processState, setProcessState] = useContext(ProcessStateContext);
+    const { processState, setProcessState } = useContext(ProcessStateContext);
     const [selectedType, setSelectedType] = useState(null);
-    const navigate = useNavigate();
+
     
     const handleSelect = (type) => {
       setSelectedType(type);
       console.log(selectedType);
     };
-    const handleNavigation = () => {
-      if (selectedType == "senior") {
-        navigate("/signup/senior");
-      } else {
-        navigate("/signup/supervisor");
-      }
-    };
+
+  
   
     return (
       <>
@@ -42,7 +36,7 @@ export default function SelectUserType() {
           </SelectButton>
         </SelectWrapper>
   
-        <NextButton onClick={handleNavigation}>다음으로</NextButton>
+        <NextButton>다음으로</NextButton>
         </>
     );
   };

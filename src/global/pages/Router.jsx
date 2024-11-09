@@ -9,7 +9,9 @@ import AlarmPage from "@/supervisor/alarm/pages/AlarmPage";
 import ChartPage from "@/supervisor/chart/pages/ChartPage";
 import LoginPage from "@/start/pages/LoginPage";
 import SignUpPage from "@/start/pages/SignUpPage";
-
+import {ProcessStateProvider } from "@/start/context/ProcessStateContext";
+import { CommonContextProvider } from "@/start/context/CommonContext";
+import { SeniorContextProvider} from "@/start/context/SeniorContext";
 
 
 const router = createBrowserRouter([
@@ -31,7 +33,15 @@ const router = createBrowserRouter([
           { path: "alarm", element: <AlarmPage /> },
           { path: "chart", element: <ChartPage /> },
           { path: "login", element: <LoginPage /> },
-          { path: "signup", element: <SignUpPage /> },
+          { path: "signup",
+            element: (
+            <ProcessStateProvider>
+              <CommonContextProvider>
+                <SeniorContextProvider>
+              <SignUpPage />
+              </SeniorContextProvider>
+              </CommonContextProvider>
+            </ProcessStateProvider>) },
 
         
         ],
