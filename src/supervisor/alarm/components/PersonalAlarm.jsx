@@ -1,25 +1,21 @@
 import styled from "styled-components";
 import UserIcon from "@/assets/UserIcon.svg";
 
-// 아래의 변수들은 임시로 만든 것. 실제론 백에서 정보를 받아와서 그 정보에 따라 다르게 나타나는 값들.
-const sampleName = "차예원";
-const sampleRatio = 0;
-
 const getMessage = (ratio) => {
-  if (ratio === 0) return "즉시 방문해보세요.";
+  if (ratio <= 12.5) return "즉시 방문해보세요.";
   else if (ratio >= 50) return "";
   else return "방문을 권고합니다.";
 };
 
 const getBackgroundColor = (ratio) => {
-  if (ratio === 0) return "#FF6347";
-  else if (ratio >= 50) return "#32CD32";
-  else return "#FFA500";
+  if (ratio <= 12.5) return "#D32F2F";
+  else if (ratio >= 50) return "#4CAF50";
+  else return "#F9A825";
 };
 
-export default function PersonalAlarm() {
+export default function PersonalAlarm({ userName, responseRate }) {
   return (
-    <Wrapper ratio={sampleRatio}>
+    <Wrapper ratio={responseRate}>
       <ProfileWrapper>
         <CircleProfile>
           <img src={UserIcon} alt="UserIcon" />
@@ -27,11 +23,10 @@ export default function PersonalAlarm() {
       </ProfileWrapper>
       <TotalTextWrapper>
         <StyledText>
-          <b>{sampleName}</b>님의 하루 응답률은 <b>{sampleRatio}%</b>입니다.
+          <b>{userName}</b>님의 하루 응답률은 <b>{responseRate}%</b>입니다.
         </StyledText>
         <SmallTextWrapper>
-          <WarningMessage>{getMessage(sampleRatio)}</WarningMessage>
-          <Date>2024.10.10.목</Date>
+          <WarningMessage>{getMessage(responseRate)}</WarningMessage>
         </SmallTextWrapper>
       </TotalTextWrapper>
     </Wrapper>
@@ -39,22 +34,21 @@ export default function PersonalAlarm() {
 }
 
 const Wrapper = styled.div`
-  width: 250px;
-  height: 70px;
+  width: 100%;
+  min-height: 70px;
   display: flex;
-  justify-content: space-evenly;
   align-items: center;
   border: 1px solid #aaaaaa;
-  border-style: solid none;
+  // border-style: solid none;
   background-color: ${({ ratio }) => getBackgroundColor(ratio)};
+  box-sizing: border-box;
 `;
 
 const ProfileWrapper = styled.div`
-  width: 40px;
-  height: 40px;
   display: flex;
-  jusify-content: center;
+  justify-content: center;
   align-items: center;
+  padding: 10px;
 `;
 
 const CircleProfile = styled.div`
@@ -66,23 +60,26 @@ const CircleProfile = styled.div`
 `;
 
 const TotalTextWrapper = styled.div`
-  display: grid;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding-right: 10px;
+  box-sizing: border-box;
 `;
 
 const StyledText = styled.div`
-  height: 20px;
+  margin: 2px;
   font-size: 12px;
 `;
 
 const SmallTextWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: end;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 2px;
 `;
 
 const WarningMessage = styled.span`
   font-size: 12px;
-`;
-const Date = styled.span`
-  font-size: 10px;
 `;

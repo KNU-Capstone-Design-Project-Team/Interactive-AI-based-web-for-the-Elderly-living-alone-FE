@@ -2,38 +2,26 @@ import React from "react";
 import { ResponsiveBar } from "@nivo/bar";
 import styled from "styled-components";
 
-// 이름은 순서 따로 없이 리스트로, 응답률은 이름 순서에 맞춰서 리스트로
-
 const getDayOfWeek = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString("ko-KR", { weekday: "short" });
 };
 
-const sampleUserName = "차예원";
+export default function PersonalChart({ data, userName }) {
+  const chartData = data.map((item) => ({
+    ...item,
+    day: getDayOfWeek(item.date),
+  }));
 
-const sampleData = [
-  { date: "2024-10-26", responseRate: 30 },
-  { date: "2024-10-27", responseRate: 70 },
-  { date: "2024-10-28", responseRate: 90 },
-  { date: "2024-10-29", responseRate: 50 },
-  { date: "2024-10-30", responseRate: 0 },
-  { date: "2024-10-31", responseRate: 100 },
-  { date: "2024-11-01", responseRate: 40 },
-].map((item) => ({
-  ...item,
-  day: getDayOfWeek(item.date),
-}));
-
-export default function PersonalChart({ data, userName = sampleUserName }) {
   return (
-    <ChartWrapper>
+    <Wrapper>
       <Title>{userName}님의 응답률</Title>
       <ResponsiveBar
-        data={sampleData}
+        data={chartData}
         keys={["responseRate"]}
         indexBy="day"
         colors={({ data }) =>
-          data.responseRate === 0
+          data.responseRate <= 12.5
             ? "#FF6347"
             : data.responseRate <= 50
             ? "#FFA500"
@@ -43,19 +31,21 @@ export default function PersonalChart({ data, userName = sampleUserName }) {
         width={250}
         height={205}
       />
-    </ChartWrapper>
+    </Wrapper>
   );
 }
 
-const ChartWrapper = styled.div`
+const Wrapper = styled.div`
   width: 250px;
   height: 250px;
   display: flex;
   flex-direction: column;
-  justify-contents: center;
+  justify-content: center;
   align-items: center;
   background-color: #f5f5f5;
   border-radius: 20px;
+  box-sizing: border-box;
+  padding: 10px;
 `;
 
 const Title = styled.h3`

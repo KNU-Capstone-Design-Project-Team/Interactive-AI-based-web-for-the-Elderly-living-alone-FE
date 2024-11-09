@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-// import { ROUTER_PATH } from ~ 라우팅은 안 한 상태
+import { ROUTER_PATH } from "@/global/const/const";
 import styled from "styled-components";
 import AlarmIcon from "@/assets/AlarmIcon.svg";
 import Graph from "@/assets/Graph.svg";
@@ -8,12 +8,12 @@ import Graph from "@/assets/Graph.svg";
 export default function SupervisorHomePage() {
   return (
     <Wrapper>
-      <StyledLink alarm>
+      <StyledLink alarm to={ROUTER_PATH.ALARM}>
         <img src={AlarmIcon} alt="Alarm" />
         <StyledText>알림</StyledText>
         <StyledText explain>지난 24시간의 응답률 알림입니다.</StyledText>
       </StyledLink>
-      <StyledLink>
+      <StyledLink to={ROUTER_PATH.CHART}>
         <img src={Graph} alt="Graph" />
         <StyledText>한 눈에 보기</StyledText>
         <StyledText explain>
