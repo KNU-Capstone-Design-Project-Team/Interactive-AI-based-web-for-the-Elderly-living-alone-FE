@@ -3,6 +3,7 @@ import { useState, useContext } from "react";
 import { ProcessStateContext } from "@/start/context/ProcessStateContext";
 import { SeniorContext } from "@/start/context/SeniorContext";
 import { CommonContext } from "@/start/context/CommonContext";
+import TopQuestion from "@/start/module/TopQuestion";
 import UnderlinedInput from "@/start/module/UnderlinedInput";
 import NextButton from "@/start/module/NextButton";
 export default function GetBirtday() {
@@ -30,14 +31,12 @@ const handleNext = () => {
 }
   return (
     <>
-    <TopWrapper>
-        <TopInsideWrapper>
-      <Name>{userName}</Name>
-      <QuestionText1>님의</QuestionText1>
-      </TopInsideWrapper>
-      <QuestionText2>생년월일은?</QuestionText2>
-      </TopWrapper>
-      <InputWrapper>
+    <TopQuestion 
+    name={userName}
+    text1="님의"
+    text2="생년월일은?">
+    </TopQuestion>
+    <InputWrapper>
         <UnderlinedInput
           value={birthYear}
           onChange={handleYearChange}
@@ -59,33 +58,7 @@ const handleNext = () => {
   );
 }
 
-const TopWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 60px;
-    gap: 8px;
 
-`;
-const TopInsideWrapper = styled.div`
-  display: flex;  
-    gap: 5px;
-    align-items: baseline; 
-`;
-const Name = styled.span`
-  font-size: 40px;
-  font-weight: bold;
-  background: linear-gradient(to top, #f3d6ca 50%, transparent 50%);
-`;
-const QuestionText1 = styled.span`
-  font-size: 32px;  
-  letter-spacing: -2px;
-`;
-
-const QuestionText2 = styled.span`
-  font-size: 32px;  
-  letter-spacing: -2px;
-`;
 const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
