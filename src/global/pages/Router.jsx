@@ -4,7 +4,7 @@ import InsideLayout from "@/global/pages/InsideLayout";
 import SeniorHomePage from "@/senior/home/pages/SeniorHomePage";
 import ChatPage from "@/senior/chat/pages/ChatPage";
 import RecommendPage from "@/senior/recommend/pages/RecommendPage";
-import SupervisorHomePage from "@/supervisor/global/pages/SupervisorHomePage";
+import SupervisorHomePage from "@/supervisor/home/pages/SupervisorHomePage";
 import AlarmPage from "@/supervisor/alarm/pages/AlarmPage";
 import ChartPage from "@/supervisor/chart/pages/ChartPage";
 import LoginPage from "@/start/pages/LoginPage";

@@ -2,8 +2,6 @@ import React from "react";
 import { ResponsiveBar } from "@nivo/bar";
 import styled from "styled-components";
 
-// 이름은 순서 따로 없이 리스트로, 응답률은 이름 순서에 맞춰서 리스트로
-
 const getDayOfWeek = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString("ko-KR", { weekday: "short" });
