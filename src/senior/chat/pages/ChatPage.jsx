@@ -33,21 +33,20 @@ export default function ChatPage() {
   }, []);
 
   const sendEmptyMessage = async () => {
-    await axios.post(`${API_BASE_URL}/chat`, { message: "" });
+    await axios.post(`${API_BASE_URL}/senior/01028435533/chat`, { message: "" });
     setMessages((prevMessages) => [...prevMessages, { sender: "system", text: "No input received." }]);
   };
 
   const fetchNewQuestion = async () => {
-    const response = await axios.get(`${API_BASE_URL}/new-question`);
+    const response = await axios.get(`${API_BASE_URL}/senior/01028435533/chat`);
     setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.question }]);
   };
 
   const onSendClicked = async () => {
     if (toSendMessage.trim() === "") return;
 
-    // try {
-      // 메시지를 서버로 전송하고 사용자의 메시지를 먼저 추가
-      // await axios.post(`${API_BASE_URL}/chat`, { message: toSendMessage });
+    try {
+      await axios.post(`${API_BASE_URL}/senior/01028435533/chat`, { message: toSendMessage });
       setMessages((prevMessages) => [...prevMessages, { sender: "user", text: toSendMessage }]);
   
 
@@ -56,12 +55,11 @@ export default function ChatPage() {
       setLastMessageTime(Date.now());
   
       setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: "This is a test AI response." }]);
-      // 서버로부터 응답 메시지 가져오기
-    //   const response = await axios.get(`${API_BASE_URL}/chat`);
-    //   setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.message }]);
-    // } catch (error) {
-    //   console.error("Failed to send or receive message:", error);
-    // }
+      const response = await axios.get(`${API_BASE_URL}/senior/01028435533/chat`);
+      setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.message }]);
+    } catch (error) {
+      console.error("Failed to send or receive message:", error);
+    }
   };
 
 
