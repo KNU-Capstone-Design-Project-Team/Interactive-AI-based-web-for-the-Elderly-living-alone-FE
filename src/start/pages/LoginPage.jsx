@@ -15,7 +15,7 @@ export default function LoginPage() {
       <StyledInput placeholder="비밀번호" />
       <StyledButton login onClick={goHome}>로그인</StyledButton>
       <BottomWrapper>
-      <TransitionLink>회원가입</TransitionLink>
+      <TransitionLink to="/signup">회원가입</TransitionLink>
       <TransitionLine>|</TransitionLine>
       <TransitionLink>아이디 찾기</TransitionLink>
       <TransitionLine>|</TransitionLine>
@@ -72,10 +72,12 @@ const BottomWrapper = styled.div `
   gap: 5px;
   margin-top: 12px;
 `;
-const TransitionLink = styled.span `
+const TransitionLink = styled(Link) `
     font-size: 12px;
     color: #8e8d8d;
     font-weight: bold;
+    cursor: pointer;
+    text-decoration: none; /* 링크 밑줄 제거 */
 `;
 
 const TransitionLine = styled.span `
