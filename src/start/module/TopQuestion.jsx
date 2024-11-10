@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const TopQuestion = ({ name, text1, text2 }) => {
+const TopQuestion = ({ name, text1, text2, text3 }) => {
 return(
 <TopWrapper>
     <TopInsideWrapper>
@@ -8,6 +8,7 @@ return(
       <QuestionText1>{text1}</QuestionText1>
     </TopInsideWrapper>
     <QuestionText2>{text2}</QuestionText2>
+    {text3 && text3.trim() !== "" && <QuestionText3>{text3}</QuestionText3>}
   </TopWrapper>
 )
 };
@@ -35,6 +36,10 @@ const QuestionText1 = styled.span`
 `;
 
 const QuestionText2 = styled.span`
+  font-size: 32px;
+  letter-spacing: -2px;
+`;
+const QuestionText3 = styled.span`
   font-size: 32px;
   letter-spacing: -2px;
 `;

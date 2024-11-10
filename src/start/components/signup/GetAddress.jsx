@@ -5,18 +5,12 @@ import { SeniorContext } from "@/start/context/SeniorContext";
 import { CommonContext } from "@/start/context/CommonContext";
 import UnderlinedInput from "@/start/module/UnderlinedInput";
 import NextButton from "@/start/module/NextButton";
+import TopQuestion from "@/start/module/TopQuestion";
 
 export default function GetAddress() {
   const { processState, setProcessState } = useContext(ProcessStateContext);
   const { userName } = useContext(CommonContext);
-  const {
-    city,
-        setCity,
-        gu,
-        setGu,
-        dong,
-        setDong,
-  } = useContext(SeniorContext);
+  const { city, setCity, gu, setGu, dong, setDong } = useContext(SeniorContext);
   const handleCityChange = (event) => {
     setCity(event.target.value);
   };
@@ -26,18 +20,16 @@ export default function GetAddress() {
   const handleDongChange = (event) => {
     setDong(event.target.value);
   };
-const handleNext = () => {
-    setProcessState('getCategory');
-}
+  const handleNext = () => {
+    setProcessState("getCategory");
+  };
   return (
     <>
-    <TopWrapper>
-        <TopInsideWrapper>
-      <Name>{userName}</Name>
-      <QuestionText1>님</QuestionText1>
-      </TopInsideWrapper>
-      <QuestionText2>어디에 사시나요?</QuestionText2>
-      </TopWrapper>
+    <TopQuestion 
+    name={userName}
+    text1="님"
+    text2="어디에 사시나요?">
+    </TopQuestion>
       <InputWrapper>
         <UnderlinedInput
           value={city}
@@ -60,33 +52,7 @@ const handleNext = () => {
   );
 }
 
-const TopWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    /* align-items: center; */
-    margin-top: 60px;
-    gap: 8px;
 
-`;
-const TopInsideWrapper = styled.div`
-  display: flex;  
-    gap: 5px;
-    align-items: baseline; 
-`;
-const Name = styled.span`
-  font-size: 40px;
-  font-weight: bold;
-  background: linear-gradient(to top, #f3d6ca 50%, transparent 50%);
-`;
-const QuestionText1 = styled.span`
-  font-size: 32px;  
-  letter-spacing: -2px;
-`;
-
-const QuestionText2 = styled.span`
-  font-size: 32px;  
-  letter-spacing: -2px;
-`;
 const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;

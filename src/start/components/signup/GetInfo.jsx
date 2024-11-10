@@ -37,7 +37,7 @@ export default function GetInfo() {
     setProcessState('getBirthday');
     }
     else{
-        setProcessState('OutputCode');
+        setProcessState('outputCode');
     }
   }
 

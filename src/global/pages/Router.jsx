@@ -12,7 +12,7 @@ import SignUpPage from "@/start/pages/SignUpPage";
 import {ProcessStateProvider } from "@/start/context/ProcessStateContext";
 import { CommonContextProvider } from "@/start/context/CommonContext";
 import { SeniorContextProvider} from "@/start/context/SeniorContext";
-
+import { SupervisorContextProvider } from "@/start/context/SupervisorContext";
 
 const router = createBrowserRouter([
   {
@@ -37,9 +37,11 @@ const router = createBrowserRouter([
             element: (
             <ProcessStateProvider>
               <CommonContextProvider>
+                <SupervisorContextProvider>
                 <SeniorContextProvider>
               <SignUpPage />
               </SeniorContextProvider>
+              </SupervisorContextProvider>
               </CommonContextProvider>
             </ProcessStateProvider>) },
 

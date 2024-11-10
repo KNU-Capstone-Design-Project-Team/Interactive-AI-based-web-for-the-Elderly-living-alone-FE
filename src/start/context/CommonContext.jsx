@@ -9,6 +9,7 @@ export const CommonContextProvider = ({ children }) => {
   const [userPw, setUserPw] = useState("");
   const [userPnum, setUserPnum] = useState("");
 
+
   return (
     <CommonContext.Provider 
     value={{ 
@@ -22,6 +23,7 @@ export const CommonContextProvider = ({ children }) => {
       setUserPw,
       userPnum,
       setUserPnum
+
        }}>
       {children}
     </CommonContext.Provider>

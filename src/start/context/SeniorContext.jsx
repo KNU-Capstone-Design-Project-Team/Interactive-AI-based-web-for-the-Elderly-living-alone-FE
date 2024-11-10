@@ -10,6 +10,7 @@ export const SeniorContextProvider = ({ children }) => {
     const [gu, setGu] = useState("");
     const [dong, setDong] = useState("");
     const [categories, setCategories] = useState([]);
+    const [seniorCode, setSeniorCode] = useState([]);
 
   return (
     <SeniorContext.Provider 
@@ -27,7 +28,9 @@ export const SeniorContextProvider = ({ children }) => {
         dong,
         setDong,
         categories,
-        setCategories
+        setCategories,
+        seniorCode,
+        setSeniorCode
        }}>
       {children}
     </SeniorContext.Provider>

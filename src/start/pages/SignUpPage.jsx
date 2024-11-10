@@ -20,9 +20,9 @@ export default function SignUpPage() {
         {processState === "getBirthday" && <GetBirthday />}
         {processState === "getAddress" && <GetAddress />}
         {processState === "getCategory" && <GetCategory />}
-        {processState === "getExtraCategory" && <GetExtraCategory />}
-        {processState === "InputCode" && <InputCode />}
-        {processState === "OutputCode" && <OutputCode />}
+        {/* {processState === "getExtraCategory" && <GetExtraCategory />} */}
+        {processState === "inputCode" && <InputCode />}
+        {processState === "outputCode" && <OutputCode />}
       </Wrapper>
   );
 }
