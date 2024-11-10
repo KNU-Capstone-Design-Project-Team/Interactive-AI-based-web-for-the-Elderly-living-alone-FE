@@ -1,8 +1,6 @@
 import styled from "styled-components";
 import UserIcon from "@/assets/UserIcon.svg";
 
-// 아래의 변수들은 임시로 만든 것. 실제론 백에서 정보를 받아와서 그 정보에 따라 다르게 나타나는 값들.
-
 const getMessage = (ratio) => {
   if (ratio <= 12.5) return "즉시 방문해보세요.";
   else if (ratio >= 50) return "";
@@ -39,13 +37,11 @@ const Wrapper = styled.div`
   width: 100%;
   min-height: 70px;
   display: flex;
-  // justify-content: space-between;
   align-items: center;
   border: 1px solid #aaaaaa;
-  border-style: solid none;
+  // border-style: solid none;
   background-color: ${({ ratio }) => getBackgroundColor(ratio)};
   box-sizing: border-box;
-  flex-shrink: 0;
 `;
 
 const ProfileWrapper = styled.div`
