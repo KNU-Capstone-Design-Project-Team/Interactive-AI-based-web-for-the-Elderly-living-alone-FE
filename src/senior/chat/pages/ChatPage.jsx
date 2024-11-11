@@ -10,6 +10,45 @@ export default function ChatPage() {
   const [messages, setMessages] = useState([]);
   const [lastMessageTime, setLastMessageTime] = useState(Date.now());
 
+  // 입력 후 서버로 전송
+// 클라이언트: 메시지를 서버로 전송하면서 응답을 대기
+const onSendClicked = async () => {
+  if (toSendMessage.trim() === "") return;
+
+  try {
+    const response = await axios.post(`${API_BASE_URL}/senior/01028435533/chat`, { message: toSendMessage }, { timeout: 30000 });
+    setMessages((prevMessages) => [...prevMessages, { sender: "user", text: toSendMessage }]);
+    setToSendMessage("");
+    setLastMessageTime(Date.now());
+    setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.response }]);
+  } catch (error) {
+    console.error("Failed to send or receive message:", error);
+  }
+};
+
+  // 롱 폴링 방식으로 서버 응답 대기
+  const fetchNewQuestion = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/senior/01028435533/chat`, { timeout: 10000 }); // 최대 대기 시간 설정
+      if (response.data.question) {
+        setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.question }]);
+      }
+    } catch (error) {
+      if (error.code !== 'ECONNABORTED') { // 타임아웃 이외의 에러 처리
+        console.error("Failed to fetch new question:", error);
+      }
+    } finally {
+      fetchNewQuestion(); // 다음 응답 대기
+    }
+  };
+
+  // 빈 메시지를 일정 시간마다 전송
+  const sendEmptyMessage = async () => {
+    await axios.post(`${API_BASE_URL}/senior/01028435533/chat`, { message: "" });
+    setMessages((prevMessages) => [...prevMessages, { sender: "system", text: "No input received." }]);
+  };
+
+  // 빈 메시지 타이머
   useEffect(() => {
     const interval = setInterval(() => {
       const currentTime = Date.now();
@@ -21,76 +60,41 @@ export default function ChatPage() {
     return () => clearInterval(interval);
   }, [lastMessageTime]);
 
+  // 컴포넌트 마운트 시 롱 폴링 시작
   useEffect(() => {
-    const interval = setInterval(() => {
-      const currentHour = new Date().getHours();
-      if (currentHour >= 8 && currentHour <= 22 && currentHour % 2 === 0) {
-        fetchNewQuestion();
-      }
-    }, 60 * 60 * 1000);
-
-    return () => clearInterval(interval);
+    fetchNewQuestion();
   }, []);
 
-  const sendEmptyMessage = async () => {
-    await axios.post(`${API_BASE_URL}/senior/01028435533/chat`, { message: "" });
-    setMessages((prevMessages) => [...prevMessages, { sender: "system", text: "No input received." }]);
-  };
-
-  const fetchNewQuestion = async () => {
-    const response = await axios.get(`${API_BASE_URL}/senior/01028435533/chat`);
-    setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.question }]);
-  };
-
-  const onSendClicked = async () => {
-    if (toSendMessage.trim() === "") return;
-
-    try {
-      await axios.post(`${API_BASE_URL}/senior/01028435533/chat`, { message: toSendMessage });
-      setMessages((prevMessages) => [...prevMessages, { sender: "user", text: toSendMessage }]);
-  
-
-      // 입력 필드와 마지막 메시지 시간을 초기화
-      setToSendMessage("");
-      setLastMessageTime(Date.now());
-  
-      setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: "This is a test AI response." }]);
-      const response = await axios.get(`${API_BASE_URL}/senior/01028435533/chat`);
-      setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.message }]);
-    } catch (error) {
-      console.error("Failed to send or receive message:", error);
-    }
-  };
-
-
   return (
-   <Wrapper>
+    <Wrapper>
       <ChatList>
         {messages.map((msg, index) => (
           <Message key={index} sender={msg.sender}>
-         {msg.sender === "ai" ? (
-         <>
-        <MessageIcon sender={msg.sender}>
-          <BotMessageSquare size={24} />
-        </MessageIcon>
-        {msg.text}
-        </>
-    ) : (
-      <>
-        {msg.text}
-        <MessageIcon sender={msg.sender}>
-          <UserRound size={24} />
-        </MessageIcon>
-      </>
-    )}
+            {msg.sender === "ai" ? (
+              <>
+                <MessageIcon sender={msg.sender}>
+                  <BotMessageSquare size={24} />
+                </MessageIcon>
+                {msg.text}
+              </>
+            ) : (
+              <>
+                {msg.text}
+                <MessageIcon sender={msg.sender}>
+                  <UserRound size={24} />
+                </MessageIcon>
+              </>
+            )}
           </Message>
         ))}
       </ChatList>
       <ChatInputBox message={toSendMessage} setMessage={setToSendMessage} onSendClicked={onSendClicked} />
     </Wrapper>
-    
   );
 }
+
+// 스타일 컴포넌트 설정 (Wrapper, ChatList, Message, MessageIcon 등등)
+
 
 const Wrapper = styled.div`
   width: 100%;
