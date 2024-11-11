@@ -5,60 +5,99 @@ import axios from "axios";
 import { API_BASE_URL } from "@/global/const/const";
 import { BotMessageSquare, UserRound } from "lucide-react";
 
-export default function ChatPage() {
+export default function ChatPage({ loginId }) {
   const [toSendMessage, setToSendMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [lastMessageTime, setLastMessageTime] = useState(Date.now());
+  const [lastMessageTime, setLastMessageTime] = useState(null);
+  const [isInputActive, setIsInputActive] = useState(false);
+  const [isFirstReply, setIsFirstReply] = useState(true);
 
-  // 입력 후 서버로 전송
-// 클라이언트: 메시지를 서버로 전송하면서 응답을 대기
-const onSendClicked = async () => {
-  if (toSendMessage.trim() === "") return;
-
-  try {
-    const response = await axios.post(`${API_BASE_URL}/senior/01028435533/chat`, { message: toSendMessage }, { timeout: 30000 });
-    setMessages((prevMessages) => [...prevMessages, { sender: "user", text: toSendMessage }]);
-    setToSendMessage("");
-    setLastMessageTime(Date.now());
-    setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.response }]);
-  } catch (error) {
-    console.error("Failed to send or receive message:", error);
-  }
-};
-
-  // 롱 폴링 방식으로 서버 응답 대기
+  // 정기적으로 새 메시지를 확인하는 롱 폴링 함수
   const fetchNewQuestion = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/senior/01028435533/chat`, { timeout: 10000 }); // 최대 대기 시간 설정
-      if (response.data.question) {
-        setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.question }]);
+      const response = await axios.get(`${API_BASE_URL}/chatLongPoll`, { timeout: 10000 });
+      if (response.status === 200) {
+        setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.message }]);
+        setIsInputActive(true); // 새 질문이 들어오면 입력 활성화
+        setIsFirstReply(true); // 첫 번째 답장 상태로 전환
+        setLastMessageTime(Date.now()); // 타이머 초기화
       }
     } catch (error) {
-      if (error.code !== 'ECONNABORTED') { // 타임아웃 이외의 에러 처리
+      if (error.response && error.response.status === 500) {
+        console.error("Internal server error");
+      } else {
         console.error("Failed to fetch new question:", error);
       }
     } finally {
-      fetchNewQuestion(); // 다음 응답 대기
+      setTimeout(fetchNewQuestion, 10000); // 10초 후에 다시 호출
     }
   };
 
-  // 빈 메시지를 일정 시간마다 전송
-  const sendEmptyMessage = async () => {
-    await axios.post(`${API_BASE_URL}/senior/01028435533/chat`, { message: "" });
-    setMessages((prevMessages) => [...prevMessages, { sender: "system", text: "No input received." }]);
+  // 사용자가 입력 후 서버로 전송
+  const onSendClicked = async () => {
+    if (toSendMessage.trim() === "") return;
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/senior/${loginId}/chat`, { userInput: toSendMessage }, { timeout: 30000 });
+      if (response.status === 200) {
+        setMessages((prevMessages) => [...prevMessages, { sender: "user", text: toSendMessage }]);
+        setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.aiContentSentence }]);
+        setToSendMessage("");
+        setLastMessageTime(Date.now());
+
+        if (isFirstReply) {
+          setIsFirstReply(false); // 첫 번째 답장 후 두 번째 답장 상태로 전환
+        } else {
+          setIsInputActive(false); // 두 번째 답장이 완료되면 입력 비활성화
+        }
+      } else if (response.status === 204) {
+        console.log("Accept the blank request and end the conversation.");
+        setIsInputActive(false);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 429) {
+        console.error("The number of conversations has been exceeded.");
+      } else if (error.response && error.response.status === 500) {
+        console.error("Internal server error");
+      } else {
+        console.error("Failed to send or receive message:", error);
+      }
+    }
   };
 
-  // 빈 메시지 타이머
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const currentTime = Date.now();
-      if (currentTime - lastMessageTime >= 10 * 60 * 1000) {
-        sendEmptyMessage();
+  // 공백 메시지 전송 함수
+  const sendEmptyMessage = async () => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/senior/${loginId}/chat`, { userInput: "" });
+      if (response.status === 204) {
+        setMessages((prevMessages) => [...prevMessages, { sender: "system", text: "No input received." }]);
       }
-    }, 10 * 60 * 1000);
+    } catch (error) {
+      console.error("Failed to send empty message:", error);
+    }
+  };
 
-    return () => clearInterval(interval);
-  }, [lastMessageTime]);
+  // 타이머: 첫 번째 사용자 답장 및 두 번째 사용자 답장 대기
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const currentTime = Date.now();
+      if (isFirstReply && isInputActive) {
+        // 첫 번째 답장 대기 시간(1시간)
+        if (currentTime - lastMessageTime >= 60 * 60 * 1000) {
+          sendEmptyMessage();
+          setIsInputActive(false); // 입력 비활성화
+        }
+      } else if (!isFirstReply && isInputActive) {
+        // 두 번째 답장 대기 시간(10분)
+        if (currentTime - lastMessageTime >= 10 * 60 * 1000) {
+          sendEmptyMessage();
+          setIsInputActive(false); // 입력 비활성화
+        }
+      }
+    }, 1000); // 1초마다 체크
+
+    return () => clearInterval(timer);
+  }, [lastMessageTime, isFirstReply, isInputActive]);
 
   // 컴포넌트 마운트 시 롱 폴링 시작
   useEffect(() => {
@@ -88,13 +127,17 @@ const onSendClicked = async () => {
           </Message>
         ))}
       </ChatList>
-      <ChatInputBox message={toSendMessage} setMessage={setToSendMessage} onSendClicked={onSendClicked} />
+      <ChatInputBox
+        message={toSendMessage}
+        setMessage={setToSendMessage}
+        onSendClicked={onSendClicked}
+        disabled={!isInputActive} // 비활성화 상태를 disabled 속성으로 전달
+      />
     </Wrapper>
   );
 }
 
 // 스타일 컴포넌트 설정 (Wrapper, ChatList, Message, MessageIcon 등등)
-
 
 const Wrapper = styled.div`
   width: 100%;
@@ -116,16 +159,16 @@ const Message = styled.div`
   border-radius: 10px;
   align-self: ${({ sender }) => (sender === "user" ? "flex-end" : "flex-start")};
   display: flex;
-  justify-content: ${({ sender }) => (sender === "user" ? "right" : "left")}; // 수정된 부분
+  justify-content: ${({ sender }) => (sender === "user" ? "right" : "left")};
   gap: 5px;
 `;
 
 const MessageIcon = styled.div`
   display: flex;
-  border-radius: 50%; /* 동그라미 모양 */
+  border-radius: 50%;
   border: 1px solid black;
   width: 24px;
   height: 24px;
   background-color: white;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.4); /* 그림자 추가 */
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.4);
 `;
