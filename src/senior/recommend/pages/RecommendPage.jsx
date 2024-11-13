@@ -3,10 +3,14 @@ import { useState, useEffect } from "react";
 import PersonalProgramPost from "../components/PersonalProgramPost";
 import axios from "axios";
 import { API_BASE_URL } from "@/global/const/const";
+import ProgramPost from "../components/ProgramPost";
+import Modal from "../components/Modal";
 
 export default function RecommendPage() {
   const [programData, setProgramData] = useState([]);
   const [loginId, setLoginId] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -14,15 +18,22 @@ export default function RecommendPage() {
         const response = await axios.get(
           `${API_BASE_URL}/senior/${loginId}/recommand`
         );
-        setProgramData({
-          title: response.data.title,
-          location: response.data.location,
-        });
+        setProgramData(response.data);
       } catch (error) {}
     }
 
     fetchData();
   }, []);
+
+  const openModal = (program) => {
+    setSelectedProgram(program);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProgram(null);
+  };
 
   return (
     <Wrapper>
@@ -32,9 +43,13 @@ export default function RecommendPage() {
             key={index}
             title={program.title}
             location={program.location}
+            onClick={() => openModal(program)}
           />
         ))}
       </PostList>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        {selectedProgram && <ProgramPost programData={selectedProgram} />}
+      </Modal>
     </Wrapper>
   );
 }
