@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
-export default function PersonalProgramPost({ title, location }) {
+export default function PersonalProgramPost({ title, location, onClick }) {
   return (
-    <Wrapper>
-      <ImageContents></ImageContents>
+    <Wrapper onClick={onClick}>
+      <ImageContents />
       <TotalTextWrapper>
         <TitleText>{title}</TitleText>
         <LocationText>{location}</LocationText>
