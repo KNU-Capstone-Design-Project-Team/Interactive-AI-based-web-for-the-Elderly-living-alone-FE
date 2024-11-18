@@ -31,7 +31,7 @@ export default function GetCategory() {
     text2="관심 분야는?">
     </TopQuestion>
       <InputWrapper>
-      {["요리", "노래", "운동", "글쓰기", "시사", "식물재배", "세계", "그 외"].map((category) => (
+      {["요리", "운동", "바둑", "노래", "춤", "서예", "스마트폰", "식물재배"].map((category) => (
           //category는 배열의 각 요소, map 함수의 반복을 통해 하나씩 category라는 이름으로 전달됨
           <SelectButton
             key={category}
