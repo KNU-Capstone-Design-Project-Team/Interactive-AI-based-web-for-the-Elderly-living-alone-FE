@@ -20,6 +20,7 @@ const Wrapper = styled.div`
   align-items: center;
   border: 1px solid black;
   border-radius: 20px;
+  cursor: pointer;
 `;
 
 const ImageContents = styled.img`
