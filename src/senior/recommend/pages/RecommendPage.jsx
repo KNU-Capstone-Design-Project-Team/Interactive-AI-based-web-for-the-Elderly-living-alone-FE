@@ -16,47 +16,47 @@ export default function RecommendPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        //   const response = await axios.get(
-        //     `${API_BASE_URL}/senior/${loginId}/recommand`,
-        //     {
-        //       params: {
-        //         category: {category} // 쿼리 파라미터
-        //       }
-        //     }
-        //   );
-        //   setProgramData(response.data.pageList);
-        setProgramData([
-          {
-            title: "요가",
-            date: "2021-10-10",
-            location: "서울시 강남구",
-            content: "요가 수업을 진행합니다.",
-            reception: "2021-10-10",
-            ask: "어디어디로",
-            poster:
-              "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAE0lEQVR42mP8z8BQz0AEYBxVSF8AAF4ADypAyK8AAAAASUVORK5CYII=",
-          },
-          {
-            title: "요가",
-            date: "2021-10-10",
-            location: "서울시 강남구",
-            content: "요가 수업을 진행합니다.",
-            reception: "2021-10-10",
-            ask: "어디어디로",
-            poster:
-              "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAE0lEQVR42mP8z8BQz0AEYBxVSF8AAF4ADypAyK8AAAAASUVORK5CYII=",
-          },
-          {
-            title: "요가",
-            date: "2021-10-10",
-            location: "서울시 강남구",
-            content: "요가 수업을 진행합니다.",
-            reception: "2021-10-10",
-            ask: "어디어디로",
-            poster:
-              "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAE0lEQVR42mP8z8BQz0AEYBxVSF8AAF4ADypAyK8AAAAASUVORK5CYII=",
-          },
-        ]);
+          const response = await axios.get(
+            `${API_BASE_URL}/senior/${loginId}/recommand`,
+            {
+              params: {
+                category: {category} // 쿼리 파라미터
+              }
+            }
+          );
+          setProgramData(response.data.pageList);
+        // setProgramData([
+        //   {
+        //     title: "요가",
+        //     date: "2021-10-10",
+        //     location: "서울시 강남구",
+        //     content: "요가 수업을 진행합니다.",
+        //     reception: "2021-10-10",
+        //     ask: "어디어디로",
+        //     poster:
+        //       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAE0lEQVR42mP8z8BQz0AEYBxVSF8AAF4ADypAyK8AAAAASUVORK5CYII=",
+        //   },
+        //   {
+        //     title: "요가",
+        //     date: "2021-10-10",
+        //     location: "서울시 강남구",
+        //     content: "요가 수업을 진행합니다.",
+        //     reception: "2021-10-10",
+        //     ask: "어디어디로",
+        //     poster:
+        //       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAE0lEQVR42mP8z8BQz0AEYBxVSF8AAF4ADypAyK8AAAAASUVORK5CYII=",
+        //   },
+        //   {
+        //     title: "요가",
+        //     date: "2021-10-10",
+        //     location: "서울시 강남구",
+        //     content: "요가 수업을 진행합니다.",
+        //     reception: "2021-10-10",
+        //     ask: "어디어디로",
+        //     poster:
+        //       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAE0lEQVR42mP8z8BQz0AEYBxVSF8AAF4ADypAyK8AAAAASUVORK5CYII=",
+        //   },
+        // ]);
       } catch (error) {
         console.log(error);
       }
