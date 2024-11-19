@@ -3,7 +3,7 @@ import styled from "styled-components";
 export default function ProgramPost({ programData }) {
   return (
     <Wrapper>
-      <ImageContents></ImageContents>
+      <ImageContents src={programData.poster}/>
       <TotalTextWrapper>
         <TitleText>{programData.title}</TitleText>
         <DetailWrapper>

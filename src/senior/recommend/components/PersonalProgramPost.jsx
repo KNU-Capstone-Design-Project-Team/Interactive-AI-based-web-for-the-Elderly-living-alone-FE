@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
-export default function PersonalProgramPost({ title, location, onClick }) {
+export default function PersonalProgramPost({ title, location, poster, onClick }) {
   return (
     <Wrapper onClick={onClick}>
-      <ImageContents />
+      <ImageContents src={poster} />
       <TotalTextWrapper>
         <TitleText>{title}</TitleText>
         <LocationText>{location}</LocationText>
@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 const ImageContents = styled.img`
   width: 240px;
   height: 220px;
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 const TotalTextWrapper = styled.div`
