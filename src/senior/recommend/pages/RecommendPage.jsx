@@ -109,7 +109,7 @@ export default function RecommendPage() {
         ))}
       </PostList>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        {selectedProgram && <ProgramPost programData={selectedProgram} />}
+        {selectedProgram && <ProgramPost programData={selectedProgram} onClose={closeModal} />}
       </Modal>
     </Wrapper>
   );
