@@ -127,7 +127,6 @@ const Wrapper = styled.div`
 const CategoryWrapper = styled.div`
   display: flex;
   width: 100%;
-  gap: 4px;
   margin: 36px 0px 20px 60px;
 `;
 
