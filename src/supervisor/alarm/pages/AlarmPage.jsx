@@ -5,56 +5,57 @@ import axios from "axios";
 import { API_BASE_URL } from "@/global/const/const";
 
 export default function AlarmPage() {
-  const [todayDate, setTodayDate] = useState([]);
-  const [todayAlarmList, setTodayAlarmList] = useState([]);
-  const [loginId, setLoginId] = useState("sampleLoginId");
+  const [date, setDate] = useState([]);
+  const [seniorNoticeList, setSeniorNoticeList] = useState([]);
+  const [loginId, setLoginId] = useState("dlgpqls1367");
+  const [message, setMessage] = useState("");
+
 
   useEffect(() => {
-    async function fetchData() {
+    const fetchData = async () => {
       try {
+    //     const response = await axios.get(
+    //       `${API_BASE_URL}/test`,
+    //       {
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+    //     setMessage(response.data);
         const response = await axios.get(
-          `${API_BASE_URL}/supervisor/${loginId}/notice`
+          `${API_BASE_URL}/supervisor/${loginId}/notice`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
-        setTodayDate(response.data.todayDate);
-        setTodayAlarmList(response.data.todayAlarmList);
-      } catch (error) {}
+        setDate(response.data.date);
+        setSeniorNoticeList(response.data.seniorNoticeList);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     fetchData();
   }, []);
 
-  // const todayDate = "2024.11.04";
-  // const todayAlarmList = [
-  //   ["고희연", 75],
-  //   ["김채은", 0],
-  //   ["이혜빈", 32.5],
-  //   ["차예원", 50],
-  //   ["고희연", 75],
-  //   ["김채은", 0],
-  //   ["이혜빈", 32.5],
-  //   ["차예원", 50],
-  //   ["고희연", 75],
-  //   ["김채은", 0],
-  //   ["이혜빈", 32.5],
-  //   ["차예원", 50],
-  //   ["고희연", 75],
-  //   ["김채은", 0],
-  //   ["이혜빈", 32.5],
-  //   ["차예원", 50],
-  // ];
+
 
   return (
     <Wrapper>
-      <Date>{todayDate}</Date>
+      <div>{message}</div>
+      {/* <Date>{date}</Date>
       <AlarmList>
-        {todayAlarmList.map(([userName, responseRate]) => (
+        {seniorNoticeList.map(([userName, responseRate]) => (
           <PersonalAlarm
             key={userName}
             userName={userName}
             responseRate={responseRate}
           ></PersonalAlarm>
         ))}
-      </AlarmList>
+      </AlarmList> */}
     </Wrapper>
   );
 }
@@ -85,3 +86,23 @@ const Date = styled.h3`
   text-align: center;
   font-size: 1.2rem;
 `;
+
+  // const todayDate = "20241104";
+  // const todayAlarmList = [
+  //   ["고희연", 75],
+  //   ["김채은", 0],
+  //   ["이혜빈", 32.5],
+  //   ["차예원", 50],
+  //   ["고희연", 75],
+  //   ["김채은", 0],
+  //   ["이혜빈", 32.5],
+  //   ["차예원", 50],
+  //   ["고희연", 75],
+  //   ["김채은", 0],
+  //   ["이혜빈", 32.5],
+  //   ["차예원", 50],
+  //   ["고희연", 75],
+  //   ["김채은", 0],
+  //   ["이혜빈", 32.5],
+  //   ["차예원", 50],
+  // ];
