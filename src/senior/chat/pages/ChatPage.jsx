@@ -30,21 +30,20 @@ export default function ChatPage({ loginId }) {
       if (response.status === 200) {
         const currentTime = new Date();
         const formattedTime = formatTime(currentTime);
+
+        // AI 메시지 추가
         setMessages((prevMessages) => [
           ...prevMessages,
           { sender: "ai", text: response.data.message, time: formattedTime },
         ]);
+
         setIsInputActive(true);
         setIsFirstReply(true);
         setLastMessageTime(Date.now());
         setConversationCount(0); // 대화 횟수 초기화
       }
     } catch (error) {
-      if (error.response && error.response.status === 500) {
-        console.error("Internal server error");
-      } else {
-        console.error("Failed to fetch new question:", error);
-      }
+      console.error("Failed to fetch new question:", error);
     } finally {
       setTimeout(fetchNewQuestion, 2 * 60 * 60 * 1000); // 2시간 후 다시 호출
     }
@@ -63,6 +62,7 @@ export default function ChatPage({ loginId }) {
       if (response.status === 200) {
         const currentTime = new Date();
         const formattedTime = formatTime(currentTime);
+
         setMessages((prevMessages) => [
           ...prevMessages,
           { sender: "user", text: toSendMessage, time: formattedTime },
@@ -70,26 +70,17 @@ export default function ChatPage({ loginId }) {
         ]);
         setToSendMessage("");
         setLastMessageTime(Date.now());
-        setConversationCount((prevCount) => prevCount + 2); // 유저 + AI 메시지로 2 증가
+        setConversationCount((prevCount) => prevCount + 2);
 
         if (conversationCount + 2 >= 9) {
-          await sendEmptyMessage(); // 빈 문자열 전송
-          setIsInputActive(false); // 입력 비활성화
+          await sendEmptyMessage();
+          setIsInputActive(false);
         } else if (isFirstReply) {
           setIsFirstReply(false);
         }
-      } else if (response.status === 204) {
-        console.log("Accept the blank request and end the conversation.");
-        setIsInputActive(false);
       }
     } catch (error) {
-      if (error.response && error.response.status === 429) {
-        console.error("The number of conversations has been exceeded.");
-      } else if (error.response && error.response.status === 500) {
-        console.error("Internal server error");
-      } else {
-        console.error("Failed to send or receive message:", error);
-      }
+      console.error("Failed to send message:", error);
     }
   };
 
@@ -109,11 +100,9 @@ export default function ChatPage({ loginId }) {
       const currentTime = Date.now();
       if (isInputActive) {
         if (isFirstReply && currentTime - lastMessageTime >= 60 * 60 * 1000) {
-          // 첫 번째 답변 1시간 내 미응답
           sendEmptyMessage();
           setIsInputActive(false);
         } else if (!isFirstReply && currentTime - lastMessageTime >= 10 * 60 * 1000) {
-          // 이후 답변 10분 내 미응답
           sendEmptyMessage();
           setIsInputActive(false);
         }
@@ -132,20 +121,20 @@ export default function ChatPage({ loginId }) {
     <Wrapper>
       <ChatList>
         {messages.map((msg, index) => (
-          <Message key={index} sender={msg.sender}>
+          <Message key={index} $sender={msg.sender}>
             {msg.sender === "ai" ? (
               <>
-                <MessageIcon sender={msg.sender}>
+                <MessageIcon $sender={msg.sender}>
                   <BotMessageSquare size={24} />
                 </MessageIcon>
                 {msg.text}
-                <MessageTime sender={msg.sender}>{msg.time}</MessageTime>
+                <MessageTime $sender={msg.sender}>{msg.time}</MessageTime>
               </>
             ) : (
               <>
                 {msg.text}
-                <MessageTime sender={msg.sender}>{msg.time}</MessageTime>
-                <MessageIcon sender={msg.sender}>
+                <MessageTime $sender={msg.sender}>{msg.time}</MessageTime>
+                <MessageIcon $sender={msg.sender}>
                   <UserRound size={24} />
                 </MessageIcon>
               </>
@@ -163,7 +152,7 @@ export default function ChatPage({ loginId }) {
   );
 }
 
-// 스타일 컴포넌트 설정 (Wrapper, ChatList, Message, MessageIcon 등등)
+// 스타일 컴포넌트 설정
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -178,11 +167,11 @@ const ChatList = styled.div`
 `;
 
 const Message = styled.div`
-  background-color: ${({ sender }) => (sender === "user" ? "#faeeb5" : "#ECECEC")};
+  background-color: ${({ $sender }) => ($sender === "user" ? "#faeeb5" : "#ECECEC")};
   margin: 5px 0;
   padding: 15px;
   border-radius: 10px;
-  align-self: ${({ sender }) => (sender === "user" ? "flex-end" : "flex-start")};
+  align-self: ${({ $sender }) => ($sender === "user" ? "flex-end" : "flex-start")};
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -191,7 +180,7 @@ const Message = styled.div`
 const MessageTime = styled.span`
   font-size: 0.8rem;
   color: gray;
-  align-self: ${({ sender }) => (sender === "user" ? "flex-end" : "flex-start")};
+  align-self: ${({ $sender }) => ($sender === "user" ? "flex-end" : "flex-start")};
 `;
 
 const MessageIcon = styled.div`
