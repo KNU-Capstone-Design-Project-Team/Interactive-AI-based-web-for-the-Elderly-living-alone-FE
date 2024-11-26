@@ -14,7 +14,12 @@ function App() {
         },
       });
 
-      OneSignal.showSlidedownPrompt(); // 알림 동의 창
+      // 푸쉬 알림 권한이 아직 요청되지 않은 경우에만 동의 창 띄우기
+      const permission = await OneSignal.getNotificationPermission();
+
+      if (permission === "default" || permission === "denied") {
+        OneSignal.showSlidedownPrompt(); // 알림 동의 창 띄우기
+      }
     };
 
     initializeOneSignal();
