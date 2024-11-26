@@ -11,6 +11,7 @@ export default function ChatPage({ loginId }) {
   const [lastMessageTime, setLastMessageTime] = useState(null);
   const [isInputActive, setIsInputActive] = useState(false);
   const [isFirstReply, setIsFirstReply] = useState(true);
+  const [conversationCount, setConversationCount] = useState(0);
 
   // 시간 포맷 함수
   const formatTime = (date) => {
@@ -33,9 +34,10 @@ export default function ChatPage({ loginId }) {
           ...prevMessages,
           { sender: "ai", text: response.data.message, time: formattedTime },
         ]);
-        setIsInputActive(true); // 새 질문이 들어오면 입력 활성화
-        setIsFirstReply(true); // 첫 번째 답장 상태로 전환
-        setLastMessageTime(Date.now()); // 타이머 초기화
+        setIsInputActive(true);
+        setIsFirstReply(true);
+        setLastMessageTime(Date.now());
+        setConversationCount(0); // 대화 횟수 초기화
       }
     } catch (error) {
       if (error.response && error.response.status === 500) {
@@ -44,7 +46,7 @@ export default function ChatPage({ loginId }) {
         console.error("Failed to fetch new question:", error);
       }
     } finally {
-      setTimeout(fetchNewQuestion, 10000); // 10초 후에 다시 호출
+      setTimeout(fetchNewQuestion, 2 * 60 * 60 * 1000); // 2시간 후 다시 호출
     }
   };
 
@@ -64,18 +66,17 @@ export default function ChatPage({ loginId }) {
         setMessages((prevMessages) => [
           ...prevMessages,
           { sender: "user", text: toSendMessage, time: formattedTime },
-        ]);
-        setMessages((prevMessages) => [
-          ...prevMessages,
           { sender: "ai", text: response.data.aiContentSentence, time: formattedTime },
         ]);
         setToSendMessage("");
         setLastMessageTime(Date.now());
+        setConversationCount((prevCount) => prevCount + 2); // 유저 + AI 메시지로 2 증가
 
-        if (isFirstReply) {
-          setIsFirstReply(false); // 첫 번째 답장 후 두 번째 답장 상태로 전환
-        } else {
-          setIsInputActive(false); // 두 번째 답장이 완료되면 입력 비활성화
+        if (conversationCount + 2 >= 9) {
+          await sendEmptyMessage(); // 빈 문자열 전송
+          setIsInputActive(false); // 입력 비활성화
+        } else if (isFirstReply) {
+          setIsFirstReply(false);
         }
       } else if (response.status === 204) {
         console.log("Accept the blank request and end the conversation.");
@@ -94,39 +95,30 @@ export default function ChatPage({ loginId }) {
 
   // 공백 메시지 전송 함수
   const sendEmptyMessage = async () => {
-    const currentTime = new Date();
-    const formattedTime = formatTime(currentTime);
     try {
-      const response = await axios.post(`${API_BASE_URL}/senior/${loginId}/chat`, { userInput: "" });
-      if (response.status === 204) {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: "system", text: "No input received.", time: formattedTime },
-        ]);
-      }
+      await axios.post(`${API_BASE_URL}/senior/${loginId}/chat`, { userInput: "" });
+      console.log("Sent empty message to end conversation.");
     } catch (error) {
       console.error("Failed to send empty message:", error);
     }
   };
 
-  // 타이머: 첫 번째 사용자 답장 및 두 번째 사용자 답장 대기
+  // 타이머: 첫 번째 사용자 답장 및 이후 답장 대기
   useEffect(() => {
     const timer = setInterval(() => {
       const currentTime = Date.now();
-      if (isFirstReply && isInputActive) {
-        // 첫 번째 답장 대기 시간(1시간)
-        if (currentTime - lastMessageTime >= 60 * 60 * 1000) {
+      if (isInputActive) {
+        if (isFirstReply && currentTime - lastMessageTime >= 60 * 60 * 1000) {
+          // 첫 번째 답변 1시간 내 미응답
           sendEmptyMessage();
-          setIsInputActive(false); // 입력 비활성화
-        }
-      } else if (!isFirstReply && isInputActive) {
-        // 두 번째 답장 대기 시간(10분)
-        if (currentTime - lastMessageTime >= 10 * 60 * 1000) {
+          setIsInputActive(false);
+        } else if (!isFirstReply && currentTime - lastMessageTime >= 10 * 60 * 1000) {
+          // 이후 답변 10분 내 미응답
           sendEmptyMessage();
-          setIsInputActive(false); // 입력 비활성화
+          setIsInputActive(false);
         }
       }
-    }, 1000); // 1초마다 체크
+    }, 1000);
 
     return () => clearInterval(timer);
   }, [lastMessageTime, isFirstReply, isInputActive]);
@@ -165,7 +157,7 @@ export default function ChatPage({ loginId }) {
         message={toSendMessage}
         setMessage={setToSendMessage}
         onSendClicked={onSendClicked}
-        disabled={!isInputActive} // 비활성화 상태를 disabled 속성으로 전달
+        disabled={!isInputActive}
       />
     </Wrapper>
   );
@@ -192,7 +184,7 @@ const Message = styled.div`
   border-radius: 10px;
   align-self: ${({ sender }) => (sender === "user" ? "flex-end" : "flex-start")};
   display: flex;
-  flex-direction: column; /* 시간과 텍스트를 위아래로 정렬 */
+  flex-direction: column;
   gap: 5px;
 `;
 
