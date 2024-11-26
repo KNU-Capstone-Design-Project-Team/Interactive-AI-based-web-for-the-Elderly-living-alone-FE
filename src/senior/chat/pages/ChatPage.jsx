@@ -12,12 +12,27 @@ export default function ChatPage({ loginId }) {
   const [isInputActive, setIsInputActive] = useState(false);
   const [isFirstReply, setIsFirstReply] = useState(true);
 
+  // 시간 포맷 함수
+  const formatTime = (date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "오후" : "오전";
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes.toString().padStart(2, "0");
+    return `${ampm} ${formattedHours}:${formattedMinutes}`;
+  };
+
   // 정기적으로 새 메시지를 확인하는 롱 폴링 함수
   const fetchNewQuestion = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/chatLongPoll`, { timeout: 10000 });
       if (response.status === 200) {
-        setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.message }]);
+        const currentTime = new Date();
+        const formattedTime = formatTime(currentTime);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "ai", text: response.data.message, time: formattedTime },
+        ]);
         setIsInputActive(true); // 새 질문이 들어오면 입력 활성화
         setIsFirstReply(true); // 첫 번째 답장 상태로 전환
         setLastMessageTime(Date.now()); // 타이머 초기화
@@ -38,10 +53,22 @@ export default function ChatPage({ loginId }) {
     if (toSendMessage.trim() === "") return;
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/senior/${loginId}/chat`, { userInput: toSendMessage }, { timeout: 30000 });
+      const response = await axios.post(
+        `${API_BASE_URL}/senior/${loginId}/chat`,
+        { userInput: toSendMessage },
+        { timeout: 30000 }
+      );
       if (response.status === 200) {
-        setMessages((prevMessages) => [...prevMessages, { sender: "user", text: toSendMessage }]);
-        setMessages((prevMessages) => [...prevMessages, { sender: "ai", text: response.data.aiContentSentence }]);
+        const currentTime = new Date();
+        const formattedTime = formatTime(currentTime);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "user", text: toSendMessage, time: formattedTime },
+        ]);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "ai", text: response.data.aiContentSentence, time: formattedTime },
+        ]);
         setToSendMessage("");
         setLastMessageTime(Date.now());
 
@@ -67,10 +94,15 @@ export default function ChatPage({ loginId }) {
 
   // 공백 메시지 전송 함수
   const sendEmptyMessage = async () => {
+    const currentTime = new Date();
+    const formattedTime = formatTime(currentTime);
     try {
       const response = await axios.post(`${API_BASE_URL}/senior/${loginId}/chat`, { userInput: "" });
       if (response.status === 204) {
-        setMessages((prevMessages) => [...prevMessages, { sender: "system", text: "No input received." }]);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "system", text: "No input received.", time: formattedTime },
+        ]);
       }
     } catch (error) {
       console.error("Failed to send empty message:", error);
@@ -115,10 +147,12 @@ export default function ChatPage({ loginId }) {
                   <BotMessageSquare size={24} />
                 </MessageIcon>
                 {msg.text}
+                <MessageTime sender={msg.sender}>{msg.time}</MessageTime>
               </>
             ) : (
               <>
                 {msg.text}
+                <MessageTime sender={msg.sender}>{msg.time}</MessageTime>
                 <MessageIcon sender={msg.sender}>
                   <UserRound size={24} />
                 </MessageIcon>
@@ -138,7 +172,6 @@ export default function ChatPage({ loginId }) {
 }
 
 // 스타일 컴포넌트 설정 (Wrapper, ChatList, Message, MessageIcon 등등)
-
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -159,8 +192,14 @@ const Message = styled.div`
   border-radius: 10px;
   align-self: ${({ sender }) => (sender === "user" ? "flex-end" : "flex-start")};
   display: flex;
-  justify-content: ${({ sender }) => (sender === "user" ? "right" : "left")};
+  flex-direction: column; /* 시간과 텍스트를 위아래로 정렬 */
   gap: 5px;
+`;
+
+const MessageTime = styled.span`
+  font-size: 0.8rem;
+  color: gray;
+  align-self: ${({ sender }) => (sender === "user" ? "flex-end" : "flex-start")};
 `;
 
 const MessageIcon = styled.div`
