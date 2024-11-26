@@ -26,7 +26,9 @@ export default function ChatPage({ loginId }) {
   // 정기적으로 새 메시지를 확인하는 롱 폴링 함수
   const fetchNewQuestion = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/chatLongPoll`, { timeout: 10000 });
+      const response = await axios.get(`${API_BASE_URL}/chatLongPoll`, {
+        timeout: 10000,
+      });
       if (response.status === 200) {
         const currentTime = new Date();
         const formattedTime = formatTime(currentTime);
@@ -66,7 +68,11 @@ export default function ChatPage({ loginId }) {
         setMessages((prevMessages) => [
           ...prevMessages,
           { sender: "user", text: toSendMessage, time: formattedTime },
-          { sender: "ai", text: response.data.aiContentSentence, time: formattedTime },
+          {
+            sender: "ai",
+            text: response.data.aiContentSentence,
+            time: formattedTime,
+          },
         ]);
         setToSendMessage("");
         setLastMessageTime(Date.now());
@@ -96,7 +102,9 @@ export default function ChatPage({ loginId }) {
   // 공백 메시지 전송 함수
   const sendEmptyMessage = async () => {
     try {
-      await axios.post(`${API_BASE_URL}/senior/${loginId}/chat`, { userInput: "" });
+      await axios.post(`${API_BASE_URL}/senior/${loginId}/chat`, {
+        userInput: "",
+      });
       console.log("Sent empty message to end conversation.");
     } catch (error) {
       console.error("Failed to send empty message:", error);
@@ -112,7 +120,10 @@ export default function ChatPage({ loginId }) {
           // 첫 번째 답변 1시간 내 미응답
           sendEmptyMessage();
           setIsInputActive(false);
-        } else if (!isFirstReply && currentTime - lastMessageTime >= 10 * 60 * 1000) {
+        } else if (
+          !isFirstReply &&
+          currentTime - lastMessageTime >= 10 * 60 * 1000
+        ) {
           // 이후 답변 10분 내 미응답
           sendEmptyMessage();
           setIsInputActive(false);
@@ -178,11 +189,13 @@ const ChatList = styled.div`
 `;
 
 const Message = styled.div`
-  background-color: ${({ sender }) => (sender === "user" ? "#faeeb5" : "#ECECEC")};
+  background-color: ${({ sender }) =>
+    sender === "user" ? "#faeeb5" : "#ECECEC"};
   margin: 5px 0;
   padding: 15px;
   border-radius: 10px;
-  align-self: ${({ sender }) => (sender === "user" ? "flex-end" : "flex-start")};
+  align-self: ${({ sender }) =>
+    sender === "user" ? "flex-end" : "flex-start"};
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -191,7 +204,8 @@ const Message = styled.div`
 const MessageTime = styled.span`
   font-size: 0.8rem;
   color: gray;
-  align-self: ${({ sender }) => (sender === "user" ? "flex-end" : "flex-start")};
+  align-self: ${({ sender }) =>
+    sender === "user" ? "flex-end" : "flex-start"};
 `;
 
 const MessageIcon = styled.div`
