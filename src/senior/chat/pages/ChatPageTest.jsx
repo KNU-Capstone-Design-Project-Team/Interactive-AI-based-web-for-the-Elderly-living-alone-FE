@@ -1,132 +1,26 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ChatInputBox from "@/senior/chat/components/ChatInputBox.jsx";
-import axios from "axios";
-import { API_BASE_URL } from "@/global/const/const";
 import { BotMessageSquare, UserRound } from "lucide-react";
 
 export default function ChatPageTest() {
   const [toSendMessage, setToSendMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [lastMessageTime, setLastMessageTime] = useState(null);
-  const [isInputActive, setIsInputActive] = useState(false);
-  const [isFirstReply, setIsFirstReply] = useState(true);
-  const [conversationCount, setConversationCount] = useState(0);
-    const loginId = "test";
-  // 시간 포맷 함수
-  const formatTime = (date) => {
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? "오후" : "오전";
-    const formattedHours = hours % 12 || 12;
-    const formattedMinutes = minutes.toString().padStart(2, "0");
-    return `${ampm} ${formattedHours}:${formattedMinutes}`;
+
+  // 사용자가 입력 후 메시지를 채팅 리스트에 추가
+  const onSendClicked = () => {
+    if (toSendMessage.trim() === "") return; // 빈 메시지는 무시
+    const currentTime = new Date();
+    const formattedTime = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
+
+    // 메시지 추가
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { sender: "user", text: toSendMessage, time: formattedTime },
+    ]);
+
+    setToSendMessage(""); // 입력창 초기화
   };
-
-  // 정기적으로 새 메시지를 확인하는 롱 폴링 함수
-  const fetchNewQuestion = async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/chatLongPoll`, {
-        timeout: 10000,
-      });
-      if (response.status === 200) {
-        const currentTime = new Date();
-        const formattedTime = formatTime(currentTime);
-
-        // AI 메시지 추가
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: "ai", text: response.data.message, time: formattedTime },
-        ]);
-
-        setIsInputActive(true);
-        setIsFirstReply(true);
-        setLastMessageTime(Date.now());
-        setConversationCount(0); // 대화 횟수 초기화
-      }
-    } catch (error) {
-      console.error("Failed to fetch new question:", error);
-    } finally {
-      setTimeout(fetchNewQuestion, 2 * 60 * 60 * 1000); // 2시간 후 다시 호출
-    }
-  };
-
-  // 사용자가 입력 후 서버로 전송
-  const onSendClicked = async () => {
-    if (toSendMessage.trim() === "") return;
-
-    try {
-      const response = await axios.post(
-        `${API_BASE_URL}/senior/${loginId}/chat`,
-        { userInput: toSendMessage },
-        { timeout: 30000 }
-      );
-      if (response.status === 200) {
-        const currentTime = new Date();
-        const formattedTime = formatTime(currentTime);
-
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: "user", text: toSendMessage, time: formattedTime },
-          {
-            sender: "ai",
-            text: response.data.aiContentSentence,
-            time: formattedTime,
-          },
-        ]);
-        setToSendMessage("");
-        setLastMessageTime(Date.now());
-        setConversationCount((prevCount) => prevCount + 2);
-
-        if (conversationCount + 2 >= 9) {
-          await sendEmptyMessage();
-          setIsInputActive(false);
-        } else if (isFirstReply) {
-          setIsFirstReply(false);
-        }
-      }
-    } catch (error) {
-      console.error("Failed to send message:", error);
-    
-  };
-};
-
-  // 공백 메시지 전송 함수
-  const sendEmptyMessage = async () => {
-    try {
-      await axios.post(`${API_BASE_URL}/senior/${loginId}/chat`, {
-        userInput: "",
-      });
-      console.log("Sent empty message to end conversation.");
-    } catch (error) {
-      console.error("Failed to send empty message:", error);
-    }
-  };
-
-  // 타이머: 첫 번째 사용자 답장 및 이후 답장 대기
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const currentTime = Date.now();
-      if (isInputActive) {
-        if (isFirstReply && currentTime - lastMessageTime >= 60 * 60 * 1000) {
-          sendEmptyMessage();
-          setIsInputActive(false);
-
-        } else if (!isFirstReply && currentTime - lastMessageTime >= 10 * 60 * 1000) {
-
-          sendEmptyMessage();
-          setIsInputActive(false);
-        }
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [lastMessageTime, isFirstReply, isInputActive]);
-
-  // 컴포넌트 마운트 시 롱 폴링 시작
-  useEffect(() => {
-    fetchNewQuestion();
-  }, []);
 
   return (
     <Wrapper>
@@ -157,7 +51,7 @@ export default function ChatPageTest() {
         message={toSendMessage}
         setMessage={setToSendMessage}
         onSendClicked={onSendClicked}
-        disabled={!isInputActive}
+        disabled={false} // 항상 활성화 상태
       />
     </Wrapper>
   );
@@ -178,13 +72,11 @@ const ChatList = styled.div`
 `;
 
 const Message = styled.div`
-
   background-color: ${({ $sender }) => ($sender === "user" ? "#faeeb5" : "#ECECEC")};
   margin: 5px 0;
   padding: 15px;
   border-radius: 10px;
   align-self: ${({ $sender }) => ($sender === "user" ? "flex-end" : "flex-start")};
-
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -193,9 +85,7 @@ const Message = styled.div`
 const MessageTime = styled.span`
   font-size: 0.8rem;
   color: gray;
-
   align-self: ${({ $sender }) => ($sender === "user" ? "flex-end" : "flex-start")};
-
 `;
 
 const MessageIcon = styled.div`

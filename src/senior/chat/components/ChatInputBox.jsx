@@ -34,12 +34,12 @@ export default function ChatInputBox({
 
     if (isRecording) {
       recognition.stop();
+      onSendClicked(); // 음성 인식 결과를 메시지로 설정
     } else {
       recognition.start();
       recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
         setMessage(transcript); // 텍스트로 변환된 결과를 메시지로 설정
-        onSendClicked(); // 텍스트 변환 후 자동 전송
       };
 
       recognition.onerror = (event) => {
@@ -52,6 +52,9 @@ export default function ChatInputBox({
 
   return (
     <Wrapper>
+        <CircleRecord onClick={handleRecordClick}>
+        {isRecording ? <StopCircle color="white" /> : <Mic color="white" />}
+      </CircleRecord>
       <SendInput
         placeholder={disabled ? "입력 불가 상태입니다." : "답장을 입력해주세요"}
         value={message}
@@ -63,9 +66,7 @@ export default function ChatInputBox({
         }}
         disabled={disabled} // 비활성화 상태 적용
       />
-      <CircleRecord onClick={handleRecordClick}>
-        {isRecording ? <StopCircle color="white" /> : <Mic color="white" />}
-      </CircleRecord>
+    
       <CircleSend onClick={onSendClicked}>
         <Send color="white" />
       </CircleSend>
