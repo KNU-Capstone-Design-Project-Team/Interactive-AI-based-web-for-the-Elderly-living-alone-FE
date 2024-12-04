@@ -17,8 +17,30 @@ export default function InputCode() {
     setSeniorCode(event.target.value);
   };
 const handleNext = () => {
+  requestAndShowNotification(); // 알림 요청 및 표시
     navigate('/senior');
 }
+
+
+  // 푸시 알림 권한 요청 및 알림 표시 함수
+  const requestAndShowNotification = () => {
+    if (!("Notification" in window)) {
+      alert("이 브라우저는 알림을 지원하지 않습니다.");
+      return;
+    }
+
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        new Notification("로그인 성공", {
+          body: "환영합니다!",
+          icon: "https://via.placeholder.com/64", // 아이콘 URL (선택 사항)
+        });
+      } else if (permission === "denied") {
+        alert("알림 권한이 거부되었습니다.");
+      }
+    });
+  };
+
   return (
     <>
     <TopQuestion 
