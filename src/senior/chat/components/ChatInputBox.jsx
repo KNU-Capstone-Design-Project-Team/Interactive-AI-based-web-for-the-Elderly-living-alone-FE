@@ -56,7 +56,7 @@ export default function ChatInputBox({
         {isRecording ? <StopCircle color="white" /> : <Mic color="white" />}
       </CircleRecord>
       <SendInput
-        placeholder={disabled ? "입력 불가 상태입니다." : "답장을 입력해주세요"}
+        placeholder={disabled ? " 입력 불가 상태입니다." : " 답장을 입력해주세요"}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={(e) => {

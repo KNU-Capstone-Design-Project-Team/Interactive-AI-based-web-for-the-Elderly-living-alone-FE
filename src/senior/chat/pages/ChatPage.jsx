@@ -4,14 +4,16 @@ import ChatInputBox from "@/senior/chat/components/ChatInputBox.jsx";
 import axios from "axios";
 import { API_BASE_URL } from "@/global/const/const";
 import { BotMessageSquare, UserRound } from "lucide-react";
+import useChatStore from "@/store/chatStore"; // Zustand 스토어 불러오기
 
 export default function ChatPage({ loginId }) {
   const [toSendMessage, setToSendMessage] = useState("");
-  const [messages, setMessages] = useState([]);
   const [lastMessageTime, setLastMessageTime] = useState(null);
   const [isInputActive, setIsInputActive] = useState(false);
   const [isFirstReply, setIsFirstReply] = useState(true);
   const [conversationCount, setConversationCount] = useState(0);
+
+  const { messages, addMessage, setMessages } = useChatStore(); // Zustand 사용
 
   // 시간 포맷 함수
   const formatTime = (date) => {
@@ -34,10 +36,7 @@ export default function ChatPage({ loginId }) {
         const formattedTime = formatTime(currentTime);
 
         // AI 메시지 추가
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: "ai", text: response.data.message, time: formattedTime },
-        ]);
+        addMessage({ sender: "ai", text: response.data.message, time: formattedTime });
 
         setIsInputActive(true);
         setIsFirstReply(true);
@@ -65,15 +64,13 @@ export default function ChatPage({ loginId }) {
         const currentTime = new Date();
         const formattedTime = formatTime(currentTime);
 
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: "user", text: toSendMessage, time: formattedTime },
-          {
-            sender: "ai",
-            text: response.data.aiContentSentence,
-            time: formattedTime,
-          },
-        ]);
+        addMessage({ sender: "user", text: toSendMessage, time: formattedTime });
+        addMessage({
+          sender: "ai",
+          text: response.data.aiContentSentence,
+          time: formattedTime,
+        });
+
         setToSendMessage("");
         setLastMessageTime(Date.now());
         setConversationCount((prevCount) => prevCount + 2);
@@ -110,9 +107,7 @@ export default function ChatPage({ loginId }) {
         if (isFirstReply && currentTime - lastMessageTime >= 60 * 60 * 1000) {
           sendEmptyMessage();
           setIsInputActive(false);
-
         } else if (!isFirstReply && currentTime - lastMessageTime >= 10 * 60 * 1000) {
-
           sendEmptyMessage();
           setIsInputActive(false);
         }
@@ -177,13 +172,11 @@ const ChatList = styled.div`
 `;
 
 const Message = styled.div`
-
   background-color: ${({ $sender }) => ($sender === "user" ? "#faeeb5" : "#ECECEC")};
   margin: 5px 0;
   padding: 15px;
   border-radius: 10px;
   align-self: ${({ $sender }) => ($sender === "user" ? "flex-end" : "flex-start")};
-
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -192,9 +185,7 @@ const Message = styled.div`
 const MessageTime = styled.span`
   font-size: 0.8rem;
   color: gray;
-
   align-self: ${({ $sender }) => ($sender === "user" ? "flex-end" : "flex-start")};
-
 `;
 
 const MessageIcon = styled.div`
