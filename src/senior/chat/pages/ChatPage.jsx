@@ -4,15 +4,15 @@ import ChatInputBox from "@/senior/chat/components/ChatInputBox.jsx";
 import axios from "axios";
 import { API_BASE_URL } from "@/global/const/const";
 import { BotMessageSquare, UserRound } from "lucide-react";
-import useChatStore from "@/store/chatStore"; // Zustand 스토어 불러오기
+import useChatStore from "@/store/ChatStore"; // Zustand 스토어 불러오기
 
-export default function ChatPage({ loginId }) {
+export default function ChatPage() {
   const [toSendMessage, setToSendMessage] = useState("");
   const [lastMessageTime, setLastMessageTime] = useState(null);
   const [isInputActive, setIsInputActive] = useState(false);
   const [isFirstReply, setIsFirstReply] = useState(true);
   const [conversationCount, setConversationCount] = useState(0);
-
+  const loginId = "test"; // 테스트용 로그인 아이디
   const { messages, addMessage, setMessages } = useChatStore(); // Zustand 사용
 
   // 시간 포맷 함수

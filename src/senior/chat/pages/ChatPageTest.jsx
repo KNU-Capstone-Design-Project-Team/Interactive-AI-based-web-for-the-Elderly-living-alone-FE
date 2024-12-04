@@ -1,23 +1,33 @@
 import styled from "styled-components";
 import { useState } from "react";
 import ChatInputBox from "@/senior/chat/components/ChatInputBox.jsx";
+import useChatStore from "@/store/chatStore"; // Zustand 스토어 불러오기
 import { BotMessageSquare, UserRound } from "lucide-react";
 
-export default function ChatPageTest() {
+export default function ChatPage() {
   const [toSendMessage, setToSendMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+ // 테스트용 로그인 아이디
+  const { messages, addMessage } = useChatStore(); // Zustand 사용
 
-  // 사용자가 입력 후 메시지를 채팅 리스트에 추가
+  // 시간 포맷 함수
+  const formatTime = (date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "오후" : "오전";
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes.toString().padStart(2, "0");
+    return `${ampm} ${formattedHours}:${formattedMinutes}`;
+  };
+
+  // 사용자가 입력 후 메시지를 리스트에 추가
   const onSendClicked = () => {
-    if (toSendMessage.trim() === "") return; // 빈 메시지는 무시
-    const currentTime = new Date();
-    const formattedTime = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
+    if (toSendMessage.trim() === "") return;
 
-    // 메시지 추가
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { sender: "user", text: toSendMessage, time: formattedTime },
-    ]);
+    const currentTime = new Date();
+    const formattedTime = formatTime(currentTime);
+
+    // 사용자가 입력한 메시지를 추가
+    addMessage({ sender: "user", text: toSendMessage, time: formattedTime });
 
     setToSendMessage(""); // 입력창 초기화
   };
@@ -51,7 +61,7 @@ export default function ChatPageTest() {
         message={toSendMessage}
         setMessage={setToSendMessage}
         onSendClicked={onSendClicked}
-        disabled={false} // 항상 활성화 상태
+        disabled={false} // 입력창 항상 활성화
       />
     </Wrapper>
   );
