@@ -3,8 +3,53 @@ import { ROUTER_PATH } from "@/global/const/const";
 import styled from "styled-components";
 import ChatIcon from "@/assets/ChatIcon.svg";
 import ThumbsUp from "@/assets/ThumbsUp.svg";
+import { useEffect } from "react";
+import axios from "axios";
 
 export default function HomePage() {
+  useEffect(() => {
+    const fetchNewQuestion = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/chatLongPoll`, {
+          timeout: 10000,
+        });
+        if (response.status === 200) {
+          // 첫 메시지가 수신되면 푸시 알림 표시
+          requestAndShowNotification(
+            "새 대화가 생성되었습니다!",
+            "AI와 대화를 시작해보세요."
+          );
+        }
+      } catch (error) {
+        console.error("Failed to fetch new question:", error);
+      } finally {
+        setTimeout(fetchNewQuestion, 2 * 60 * 60 * 1000); // 2시간 후 다시 호출
+      }
+    };
+
+    // 초기 실행
+    fetchNewQuestion();
+  }, []);
+
+  // 푸시 알림 권한 요청 및 알림 표시 함수
+  const requestAndShowNotification = (title, body) => {
+    if (!("Notification" in window)) {
+      alert("이 브라우저는 알림을 지원하지 않습니다.");
+      return;
+    }
+
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        new Notification(title, {
+          body,
+          icon: "https://via.placeholder.com/64", // 아이콘 URL (선택 사항)
+        });
+      } else if (permission === "denied") {
+        alert("알림 권한이 거부되었습니다.");
+      }
+    });
+  };
+
   return (
     <Wrapper>
       <StyledLink chat to={ROUTER_PATH.CHAT}>
