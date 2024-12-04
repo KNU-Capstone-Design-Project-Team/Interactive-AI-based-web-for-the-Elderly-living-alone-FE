@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ChatInputBox from "@/senior/chat/components/ChatInputBox.jsx";
 import axios from "axios";
 import { API_BASE_URL } from "@/global/const/const";
-import { BotMessageSquare, UserRound } from "lucide-react";
+import { BotMessageSquare, UserRound, PlayCircle } from "lucide-react";
 import useChatStore from "@/store/ChatStore"; // Zustand 스토어 불러오기
 
 export default function ChatPage() {
@@ -14,6 +14,8 @@ export default function ChatPage() {
   const [conversationCount, setConversationCount] = useState(0);
   const loginId = "test"; // 테스트용 로그인 아이디
   const { messages, addMessage, setMessages } = useChatStore(); // Zustand 사용
+
+  const audioRef = useRef(new Audio()); // 오디오 재생을 위한 ref
 
   // 시간 포맷 함수
   const formatTime = (date) => {
@@ -36,8 +38,14 @@ export default function ChatPage() {
         const formattedTime = formatTime(currentTime);
 
         // AI 메시지 추가
-        addMessage({ sender: "ai", text: response.data.message, time: formattedTime });
-
+        // addMessage({ sender: "ai", text: response.data.message, time: formattedTime });
+ // AI 메시지 추가 (텍스트와 음성 파일 포함)
+        addMessage({
+          sender: "ai",
+          text: response.data.message,
+          audioUrl: response.data.audioUrl, // 백엔드에서 전달받은 음성 파일 URL
+          time: formattedTime,
+        });
         setIsInputActive(true);
         setIsFirstReply(true);
         setLastMessageTime(Date.now());
@@ -65,9 +73,15 @@ export default function ChatPage() {
         const formattedTime = formatTime(currentTime);
 
         addMessage({ sender: "user", text: toSendMessage, time: formattedTime });
+        // addMessage({
+        //   sender: "ai",
+        //   text: response.data.aiContentSentence,
+        //   time: formattedTime,
+        // });
         addMessage({
           sender: "ai",
           text: response.data.aiContentSentence,
+          audioUrl: response.data.audioUrl, // 백엔드에서 전달받은 음성 파일 URL
           time: formattedTime,
         });
 
@@ -86,6 +100,15 @@ export default function ChatPage() {
       console.error("Failed to send message:", error);
     }
   };
+
+  // 음성 재생 함수
+  const playAudio = (audioUrl) => {
+    if (audioRef.current.src !== audioUrl) {
+      audioRef.current.src = audioUrl;
+    }
+    audioRef.current.play();
+  };
+
 
   // 공백 메시지 전송 함수
   const sendEmptyMessage = async () => {
@@ -132,7 +155,15 @@ export default function ChatPage() {
                 <MessageIcon $sender={msg.sender}>
                   <BotMessageSquare size={24} />
                 </MessageIcon>
-                {msg.text}
+                {/* 이거 밑부터  message time 앞까지 {msg.text} 얘만 */}
+                <MessageContent>
+                  {msg.text}
+                  {msg.audioUrl && (
+                    <PlayButton onClick={() => playAudio(msg.audioUrl)}>
+                      <PlayCircle size={24} />
+                    </PlayButton>
+                  )}
+                </MessageContent>
                 <MessageTime $sender={msg.sender}>{msg.time}</MessageTime>
               </>
             ) : (
@@ -196,4 +227,17 @@ const MessageIcon = styled.div`
   height: 24px;
   background-color: white;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.4);
+`;
+
+
+const PlayButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+`;
+
+const MessageContent = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
