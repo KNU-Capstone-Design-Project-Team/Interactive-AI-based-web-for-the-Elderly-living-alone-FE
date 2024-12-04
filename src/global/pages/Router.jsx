@@ -2,8 +2,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "@/global/pages/RootLayout";
 import InsideLayout from "@/global/pages/InsideLayout";
 import SeniorHomePage from "@/senior/home/pages/SeniorHomePage";
-import ChatPageTest from "@/senior/chat/pages/ChatPageTest";
-// import ChatPage from "@/senior/chat/pages/ChatPage";
+// import ChatPageTest from "@/senior/chat/pages/ChatPageTest";
+import ChatPage from "@/senior/chat/pages/ChatPage";
 import RecommendPage from "@/senior/recommend/pages/RecommendPage";
 import SupervisorHomePage from "@/supervisor/home/pages/SupervisorHomePage";
 import AlarmPage from "@/supervisor/alarm/pages/AlarmPage";
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
         path: "",
         element: <InsideLayout />,
         children: [
-          { path: "chat", element: <ChatPageTest /> },
+          { path: "chat", element: <ChatPage /> },
           { path: "recommend", element: <RecommendPage /> },
           { path: "alarm", element: <AlarmPage /> },
           { path: "chart", element: <ChartPage /> },

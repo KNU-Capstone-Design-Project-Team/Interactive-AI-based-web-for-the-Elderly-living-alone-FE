@@ -46,7 +46,7 @@ export default function AlarmPage() {
   return (
     <Wrapper>
       <div>{message}</div>
-      {/* <Date>{date}</Date>
+      <Date>{date}</Date>
       <AlarmList>
         {seniorNoticeList.map(([userName, responseRate]) => (
           <PersonalAlarm
@@ -55,7 +55,7 @@ export default function AlarmPage() {
             responseRate={responseRate}
           ></PersonalAlarm>
         ))}
-      </AlarmList> */}
+      </AlarmList>
     </Wrapper>
   );
 }
