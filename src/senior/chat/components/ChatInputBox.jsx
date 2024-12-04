@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { Send } from "lucide-react";
+import { Send, Mic, StopCircle } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function ChatInputBox({
   message,
@@ -7,6 +8,48 @@ export default function ChatInputBox({
   onSendClicked,
   disabled,
 }) {
+  const [isRecording, setIsRecording] = useState(false);
+  const [recognition, setRecognition] = useState(null);
+
+  useEffect(() => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+      const recognizer = new SpeechRecognition();
+      recognizer.lang = "ko-KR";
+      recognizer.interimResults = false;
+
+      setRecognition(recognizer);
+    } else {
+      console.error("Browser does not support Speech Recognition");
+    }
+  }, []);
+
+  const handleRecordClick = () => {
+    if (!recognition) {
+      alert("음성 인식이 현재 브라우저에서 지원되지 않습니다.");
+      return;
+    }
+
+    if (isRecording) {
+      recognition.stop();
+    } else {
+      recognition.start();
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setMessage(transcript); // 텍스트로 변환된 결과를 메시지로 설정
+        onSendClicked(); // 텍스트 변환 후 자동 전송
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        alert("음성 인식 중 오류가 발생했습니다.");
+      };
+    }
+    setIsRecording(!isRecording);
+  };
+
   return (
     <Wrapper>
       <SendInput
@@ -20,6 +63,9 @@ export default function ChatInputBox({
         }}
         disabled={disabled} // 비활성화 상태 적용
       />
+      <CircleRecord onClick={handleRecordClick}>
+        {isRecording ? <StopCircle color="white" /> : <Mic color="white" />}
+      </CircleRecord>
       <CircleSend onClick={onSendClicked}>
         <Send color="white" />
       </CircleSend>
@@ -55,6 +101,18 @@ const CircleSend = styled.button`
   border-radius: 50%;
   border-color: transparent;
   background-color: #f08a5d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+`;
+
+const CircleRecord = styled.button`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border-color: transparent;
+  background-color: ${props => (props.isRecording ? "#ff6f61" : "#1e90ff")};
   display: flex;
   justify-content: center;
   align-items: center;
