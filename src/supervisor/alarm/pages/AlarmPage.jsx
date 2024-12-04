@@ -7,7 +7,7 @@ import { API_BASE_URL } from "@/global/const/const";
 export default function AlarmPage() {
   const [date, setDate] = useState([]);
   const [seniorNoticeList, setSeniorNoticeList] = useState([]);
-  const [loginId, setLoginId] = useState("dlgpqls1367");
+  const loginId = "dlgpqls1367"; // 테스트용 로그인 아이디
   const [message, setMessage] = useState("");
 
 
@@ -24,7 +24,7 @@ export default function AlarmPage() {
     //     );
     //     setMessage(response.data);
         const response = await axios.get(
-          `${API_BASE_URL}/supervisor/${loginId}/notice`,
+          `http://localhost:5000/supervisor/${loginId}/notice`,
           {
             headers: {
               "Content-Type": "application/json",

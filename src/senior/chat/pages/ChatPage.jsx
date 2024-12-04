@@ -12,7 +12,7 @@ export default function ChatPage() {
   const [isInputActive, setIsInputActive] = useState(false);
   const [isFirstReply, setIsFirstReply] = useState(true);
   const [conversationCount, setConversationCount] = useState(0);
-  const loginId = "test"; // 테스트용 로그인 아이디
+  const loginId = "dlgpqls1367"; // 테스트용 로그인 아이디
   const { messages, addMessage, setMessages } = useChatStore(); // Zustand 사용
 
   const audioRef = useRef(new Audio()); // 오디오 재생을 위한 ref
@@ -30,7 +30,7 @@ export default function ChatPage() {
   // 정기적으로 새 메시지를 확인하는 롱 폴링 함수
   const fetchNewQuestion = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/chatLongPoll`, {
+      const response = await axios.get(`http://localhost:5000/chatLongPoll`, {
         timeout: 10000,
       });
       if (response.status === 200) {
@@ -64,7 +64,7 @@ export default function ChatPage() {
 
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/senior/${loginId}/chat`,
+        `http://localhost:5000/senior/${loginId}/chat`,
         { userInput: toSendMessage },
         { timeout: 30000 }
       );
@@ -113,7 +113,7 @@ export default function ChatPage() {
   // 공백 메시지 전송 함수
   const sendEmptyMessage = async () => {
     try {
-      await axios.post(`${API_BASE_URL}/senior/${loginId}/chat`, {
+      await axios.post(`http://localhost:5000/senior/${loginId}/chat`, {
         userInput: "",
       });
       console.log("Sent empty message to end conversation.");

@@ -8,7 +8,7 @@ import Modal from "../components/Modal";
 
 export default function RecommendPage() {
   const [programData, setProgramData] = useState([]);
-  const [loginId, setLoginId] = useState("dlgpqls1367");
+const loginId = "dlgpqls1367"; // 테스트용 로그인 아이디
   const [category, setCategory] = useState("total"); // 선택된 카테고리 total, location, preference
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
@@ -17,7 +17,7 @@ export default function RecommendPage() {
     async function fetchData() {
       try {
           const response = await axios.get(
-            `${API_BASE_URL}/senior/${loginId}/recommand`,
+            `http://localhost:5000/senior/${loginId}/recommand`,
             {
               params: {
                 category: {category} // 쿼리 파라미터

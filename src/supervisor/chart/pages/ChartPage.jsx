@@ -7,12 +7,12 @@ import { API_BASE_URL } from "@/global/const/const";
 export default function ChartPage() {
   const [nameList, setNameList] = useState([]);
   const [responseRatioList, setResponseRatioList] = useState([]);
-  const [loginId, setLoginId] = useState("dlgpqls1367");
+  const loginId = "dlgpqls1367"; // 테스트용 로그인 아이디
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/supervisor/${loginId}/stats`);
+        const response = await axios.get(`http://localhost:5000/api/supervisor/${loginId}/stats`);
         setNameList(response.data.nameList);
         setResponseRatioList(response.data.responseRatioList);
         // setUserList( ["고희연", "김채은", "이혜빈", "차예원"]);
