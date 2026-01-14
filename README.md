@@ -1,8 +1,47 @@
-# React + Vite
+# 👵 
+> **AI와의 따뜻한 대화로 어르신의 안부를 챙기고, 사회적 고립을 방지하는 스마트 세이프티 넷**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## 🌟 서비스 개요
+**RIDI**는 급격한 고령화로 인해 발생하는 독거노인의 고독사 및 사회적 고립 문제를 해결하기 위한 **대화형 AI 기반 모니터링 플랫폼**입니다. 기존의 수동적인 감지 시스템을 넘어, AI가 먼저 말을 거는 '능동적 대화'를 통해 실시간 안전을 확인하고 사회적 연결을 돕습니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
+
+## ✨ 핵심 기능 (Key Features)
+
+### 1. 🕒 시간별 자동 대화 (Proactive AI Chat)
+* **선제적 안부 확인**: 설정된 시간마다 AI가 어르신에게 먼저 대화를 시도하여 건강 상태, 식사 여부 등을 체크합니다.
+* **친근한 UX**: 어르신들이 거부감 없이 대화할 수 있는 자연어 처리 기술 기반의 인터페이스를 제공합니다.
+
+### 2. 📊 응답률 분석 및 스마트 알림
+* **응답 데이터 기록**: AI의 질문에 대한 어르신의 응답 여부와 반응 속도를 실시간으로 기록하고 분석합니다.
+* **단계별 긴급 알림**: 응답률이 낮아지거나 일정 시간 동안 무응답 상태가 지속될 경우, 보호자나 지자체 관리자에게 즉시 **Push 알림**을 전송하여 골든타임을 확보합니다.
+
+
+### 3. 🗺️ 맞춤형 지역 프로그램 추천
+* **사회 참여 독려**: 대화 내용을 통해 파악된 어르신의 관심사와 위치 정보를 바탕으로 인근 복지관 프로그램이나 소모임을 추천합니다.
+* **고립 방지**: 온라인 모니터링을 넘어 오프라인 사회 관계망 형성을 지원하여 정서적 고립을 근본적으로 해결합니다.
+
+---
+
+## 🛠 기술 스택 (Tech Stack)
+
+### Frontend
+* **Core**: React, TypeScript, Vite
+* **State Management**: Zustand, TanStack Query (React Query)
+* **Styling**: Tailwind CSS, Chakra UI, Emotion, Framer Motion
+* **Monitoring**: Sentry
+
+### Backend & AI
+* **Backend**: Java, Spring Boot, MySQL
+* **AI/ML**: Google Cloud Vertex AI (NLP), Python
+* **Infrastructure**: Google Cloud Platform (GCP)
+
+---
+
+## 💡 기대 효과
+* **사전 예방 체계**: 고독사 발생 후 발견이 아닌, 응답 데이터를 통한 실시간 이상 징후 포착 및 예방
+* **사회적 비용 절감**: 효율적인 인적 자원 배분 및 지자체 노인 복지 정책 수립을 위한 기초 데이터 제공
+* **인간 존엄성 수호**: 기술을 통한 지속적인 연결로 소외된 어르신들의 삶의 질 향상
+
